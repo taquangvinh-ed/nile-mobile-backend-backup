@@ -1,0 +1,85 @@
+package com.nilemobile.backend.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "CART_ITEM")
+public class CartItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cartItem_id", length = 36)
+    private Long id;
+
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "subtotal", nullable = false)
+    private long subtotal = 0L;
+
+
+    public void setSubtotal(long subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id", referencedColumnName = "cart_id", nullable = false)
+    private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "variation_id", nullable = false)
+    private Variation variation;
+
+    public Long getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(Long discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    private Long discountPrice;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public long getSubtotal() {
+        if (variation != null && quantity != null) {
+            return quantity * variation.getPrice();
+        }
+        return 0L;
+    }
+
+    public void setsubtotal(long subtotal) {
+        this.subtotal = subtotal;
+    }
+
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public Variation getVariation() {
+        return variation;
+    }
+
+    public void setVariation(Variation variation) {
+        this.variation = variation;
+    }
+}

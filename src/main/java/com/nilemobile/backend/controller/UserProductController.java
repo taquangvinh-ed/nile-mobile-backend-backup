@@ -15,14 +15,14 @@ import java.security.PrivateKey;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api")
 public class UserProductController {
 
     @Autowired
     private ProductService productService;
 
 
-    @PostMapping
+    @PostMapping("/admin/products")
     public ResponseEntity<ProductResponseDTO> createProductHandler(@RequestBody CreateProductRequest request) throws ProductException {
         Product product = productService.createProduct(request);
         ProductResponseDTO productDTO = new ProductResponseDTO(product);
@@ -30,7 +30,7 @@ public class UserProductController {
     }
 
 
-    @GetMapping("/id/{productId}")
+    @GetMapping("/products/id/{productId}")
     public ResponseEntity<ProductResponseDTO> findProductByIdHanlder(@PathVariable Long productId) throws ProductException{
         Product product = productService.findProductById(productId);
 
@@ -39,7 +39,7 @@ public class UserProductController {
         return ResponseEntity.ok(productDTO);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/products/filter")
     public ResponseEntity<Page<ProductResponseDTO>> filterProducts(
             @RequestParam(required = false) String firstLevel,
             @RequestParam(required = false) String secondLevel,

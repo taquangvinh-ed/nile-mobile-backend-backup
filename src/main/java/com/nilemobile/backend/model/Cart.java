@@ -23,12 +23,12 @@ public class Cart {
     private int totalItems;
 
     @OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
+
 
     public Long getCartId() {
         return cartId;

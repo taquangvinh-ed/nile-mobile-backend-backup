@@ -1,10 +1,12 @@
 package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.config.JwtProvider;
+import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.AuthResponse;
 import com.nilemobile.backend.repository.UserRepository;
 import com.nilemobile.backend.request.LoginRequest;
+import com.nilemobile.backend.service.CartService;
 import com.nilemobile.backend.service.CustomerUserServiceImplementation;
 import com.nilemobile.backend.service.UserException;
 import org.springframework.http.HttpStatus;
@@ -28,15 +30,18 @@ public class AuthController {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
     private final CustomerUserServiceImplementation customerUserServiceImplementation;
+    private  CartService cartService;
 
     public AuthController(UserRepository userRepository,
                           JwtProvider jwtProvider,
                           PasswordEncoder passwordEncoder,
-                          CustomerUserServiceImplementation customerUserServiceImplementation) {
+                          CustomerUserServiceImplementation customerUserServiceImplementation,
+                          CartService cartService) {
         this.userRepository = userRepository;
         this.jwtProvider = jwtProvider;
         this.passwordEncoder = passwordEncoder;
         this.customerUserServiceImplementation = customerUserServiceImplementation;
+        this.cartService = cartService;
     }
 
     @PostMapping("/signup")
@@ -58,6 +63,7 @@ public class AuthController {
         createdUser.setLastName(lastName);
 
         User savedUser = userRepository.save(createdUser);
+        Cart cart = cartService.createCart(savedUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, null); // Không cần password gốc
         SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -3,6 +3,7 @@ package com.nilemobile.backend.service;
 import com.nilemobile.backend.exception.CartItemException;
 import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.model.CartItem;
+import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.repository.CartItemRepository;
 import com.nilemobile.backend.repository.CartRepository;
@@ -29,9 +30,23 @@ public class CartItemServiceImp implements CartItemService {
 
     @Override
     public CartItem createCartItem(CartItem cartItem, Long userId) {
-        boolean exists = isCartItemExist(cartItem.getCart(), cartItem.getVariation(), userId);
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new CartItemException("User not found for ID: " + userId);
+        }
+
+        if (cartItem == null || cartItem.getCart() == null) {
+            throw new CartItemException("CartItem or Cart cannot be null");
+        }
+
+        // Tải cart cùng với cartItems và variation
+        Cart cart = cartRepository.findByCartIdWithItems(cartItem.getCart().getCartId())
+                .orElseThrow(() -> new CartItemException("Cart not found with ID: " + cartItem.getCart().getCartId()));
+        cart.setUser(user); // Đảm bảo user được gán
+
+        boolean exists = isCartItemExist(cart, cartItem.getVariation(), userId);
         if (exists) {
-            CartItem existingCartItem = cartItem.getCart().getCartItems().stream()
+            CartItem existingCartItem = cart.getCartItems().stream()
                     .filter(item -> item.getVariation().getId().equals(cartItem.getVariation().getId()))
                     .findFirst()
                     .orElse(null);
@@ -40,7 +55,8 @@ public class CartItemServiceImp implements CartItemService {
                 long price = existingCartItem.getVariation().getPrice();
                 existingCartItem.setSubtotal(existingCartItem.getQuantity() * price);
                 CartItem updatedCartItem = cartItemRepository.save(existingCartItem);
-                Cart cart = updatedCartItem.getCart();
+                cart = updatedCartItem.getCart();
+                cart.setUser(user);
                 cart.calculateSubtotal();
                 cartRepository.save(cart);
                 return updatedCartItem;
@@ -55,11 +71,12 @@ public class CartItemServiceImp implements CartItemService {
         } else {
             cartItem.setSubtotal(0L);
         }
+        cartItem.setCart(cart); // Gán cart cho cartItem
         CartItem saveCartItem = cartItemRepository.save(cartItem);
-        Cart cart = saveCartItem.getCart();
+        cart.setUser(user);
         cart.calculateSubtotal();
         cartRepository.save(cart);
-        return cartItem;
+        return saveCartItem;
     }
 
     @Override

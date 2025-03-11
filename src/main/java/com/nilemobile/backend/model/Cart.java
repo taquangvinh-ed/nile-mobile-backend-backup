@@ -1,5 +1,6 @@
 package com.nilemobile.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -23,10 +24,11 @@ public class Cart {
     private int totalItems;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
 
 
@@ -89,6 +91,13 @@ public class Cart {
     public void calculateSubtotal() {
         this.subtotal = cartItems.stream()
                 .mapToLong(CartItem::getSubtotal)
+                .sum();
+        this.totalItems = cartItems.size();
+        this.totalDiscountPrice = cartItems.stream()
+                .mapToLong(CartItem::getDiscountPrice)
+                .sum();
+        this.totalDiscountPercent = cartItems.stream()
+                .mapToInt(item -> item.getVariation() != null ? item.getVariation().getDiscountPercent() : 0)
                 .sum();
     }
 }

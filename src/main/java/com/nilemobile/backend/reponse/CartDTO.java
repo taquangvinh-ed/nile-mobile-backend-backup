@@ -12,14 +12,16 @@ public class CartDTO {
 
     private int totalItems;
 
-    private List<CartItemDTO> cartItem;
+    private List<CartItemDTO> cartItems;
 
     public CartDTO(long subtotal, Long totalDiscountPrice, int totalDiscountPercent, int totalItems, List<CartItemDTO> cartItem) {
         this.subtotal = subtotal;
         this.totalDiscountPrice = totalDiscountPrice;
         this.totalDiscountPercent = totalDiscountPercent;
         this.totalItems = totalItems;
-        this.cartItem = new ArrayList<>();
+        this.cartItems = (cartItem != null) ? new ArrayList<>(cartItem) : new ArrayList<>();    }
+
+    public CartDTO() {
     }
 
     public long getSubtotal() {
@@ -55,10 +57,10 @@ public class CartDTO {
     }
 
     public List<CartItemDTO> getCartItem() {
-        return cartItem;
+        return cartItems;
     }
 
-    public void setCartItem(List<CartItemDTO> cartItem) {
-        this.cartItem = cartItem;
+    public void setCartItem(List<CartItemDTO> cartItems) {
+        this.cartItems = cartItems;
     }
 }

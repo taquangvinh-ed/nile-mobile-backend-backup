@@ -1,47 +1,31 @@
 package com.nilemobile.backend.request;
 
+import com.nilemobile.backend.model.Cart;
+import com.nilemobile.backend.model.Variation;
+import com.nilemobile.backend.reponse.VariationDTO;
+
 public class AddCartItemRequest {
-    private Long productId;
-    private Long variationId;
-    private int quantity;
-    private Long price;
+    private Variation variation;
+    private Cart cart;
+    public AddCartItemRequest( Variation variationId, Cart cart) {
+        this.variation= variation;
+        this.cart = cart;
 
-    public AddCartItemRequest(Long productId, Long variationId, int quantity, Long price) {
-        this.productId = productId;
-        this.variationId = variationId;
-        this.quantity = quantity;
-        this.price = price;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Variation getVariation() {
+        return variation;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setVariation(Variation variation) {
+        this.variation = variation;
     }
 
-    public Long getVariationId() {
-        return variationId;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setVariationId(Long variationId) {
-        this.variationId = variationId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 }

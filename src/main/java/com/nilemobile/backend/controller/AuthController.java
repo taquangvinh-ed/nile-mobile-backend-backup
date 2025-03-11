@@ -24,11 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private UserRepository userRepository;
-    private JwtProvider jwtProvider;
-    private PasswordEncoder passwordEncoder;
-    private CustomerUserServiceImplementation customerUserServiceImplementation;
-
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomerUserServiceImplementation customerUserServiceImplementation;
 
     public AuthController(UserRepository userRepository,
                           JwtProvider jwtProvider,
@@ -48,22 +47,19 @@ public class AuthController {
         String lastName = user.getLastName();
 
         User isEmailExist = userRepository.findByEmail(email);
-
         if (isEmailExist != null) {
-            throw new UserException("Email is used by another person ");
+            throw new UserException("Email is used by another person");
         }
 
         User createdUser = new User();
-
         createdUser.setEmail(email);
         createdUser.setPassword(passwordEncoder.encode(password));
         createdUser.setFirstName(firstName);
         createdUser.setLastName(lastName);
 
-        User saveUser = userRepository.save(createdUser);
+        User savedUser = userRepository.save(createdUser);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(saveUser.getEmail(), saveUser.getPassword());
-
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null); // Không cần password gốc
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
@@ -72,7 +68,7 @@ public class AuthController {
         authResponse.setJwt(token);
         authResponse.setMessage("Sign up success");
 
-        return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -81,27 +77,28 @@ public class AuthController {
         String password = loginRequest.getPassword();
 
         Authentication authentication = authenticate(username, password);
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         String token = jwtProvider.generateToken(authentication);
 
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(token);
-        authResponse.setMessage("signin success");
+        authResponse.setMessage("Sign in success");
 
-        return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK); // Dùng OK thay vì CREATED
     }
 
     private Authentication authenticate(String username, String password) {
         UserDetails userDetails = customerUserServiceImplementation.loadUserByUsername(username);
 
         if (userDetails == null) {
-            throw new BadCredentialsException("username is invalid");
+            throw new BadCredentialsException("Username is invalid");
         }
 
-        if (passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Password is incorrect...");
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Password is incorrect");
         }
+
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

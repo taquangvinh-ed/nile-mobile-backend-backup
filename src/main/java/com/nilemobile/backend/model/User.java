@@ -40,9 +40,7 @@ public class User {
 //    @CollectionTable(name = "payment_information", joinColumns = @JoinColumn(name = "user_id"))
 //    private List<PaymentInformation> paymentInformations = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Rating> ratings = new ArrayList<>();
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -114,13 +112,8 @@ public class User {
         this.addresses = addresses;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
-    }
 
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
+
 
     public List<Review> getReviews() {
         return reviews;

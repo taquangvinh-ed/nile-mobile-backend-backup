@@ -1,6 +1,9 @@
 package com.nilemobile.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,13 +17,16 @@ public class Product {
     @Column(name = "product_id", length = 36)
     private Long id;
 
-    @Column(name = "name", length = 36, nullable = false)
+    @Column(name = "name", nullable = false)
+    @NotBlank(message = "Tên sản phẩm không được để trống")
+    @Size(max = 255, message = "Tên sản phẩm không được vượt quá 255 ký tự")
     private String name;
 
     @Column(name = "screenSize", length = 20)
+    @Positive(message = "Kích thước màn hình phải là số dương")
     private Float screenSize;
 
-    @Column(name = "displayTech", length = 20)
+    @Column(name = "displayTech")
     private String displayTech;
 
     @Column(name = "resolution", length = 20)
@@ -39,6 +45,7 @@ public class Product {
     private String chipset;
 
     @Column(name = "BatteryCapacity", length = 20)
+    @Positive(message = "Dung lượng pin phải là số dương")
     private Integer batteryCapacity;
 
     @Column(name = "chargingPort", length = 20)
@@ -221,5 +228,15 @@ public class Product {
 
     public void setCreateAt(LocalDateTime createAt) {
         this.createAt = createAt;
+    }
+
+    public void addVariation(Variation variation) {
+        variations.add(variation);
+        variation.setProduct(this);
+    }
+
+    public void removeVariation(Variation variation) {
+        variations.remove(variation);
+        variation.setProduct(null);
     }
 }

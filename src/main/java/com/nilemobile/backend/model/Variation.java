@@ -46,8 +46,6 @@ public class Variation {
     @OneToMany(mappedBy = "variation", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "variation", cascade = CascadeType.ALL)
-    private List<Rating> ratings = new ArrayList<>();
 
     @OneToMany(mappedBy = "variation", cascade = CascadeType.ALL)
     private List<CartItem> cartItems;
@@ -141,14 +139,6 @@ public class Variation {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
-    }
-
-    public List<Rating> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
     }
 
     public List<CartItem> getCartItems() {

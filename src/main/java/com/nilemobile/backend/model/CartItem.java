@@ -29,14 +29,6 @@ public class CartItem {
     @JoinColumn(name = "variation_id", nullable = false)
     private Variation variation;
 
-    public Long getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public void setDiscountPrice(Long discountPrice) {
-        this.discountPrice = discountPrice;
-    }
-
     private Long discountPrice;
 
     public Long getId() {
@@ -62,11 +54,6 @@ public class CartItem {
         return 0L;
     }
 
-    public void setsubtotal(long subtotal) {
-        this.subtotal = subtotal;
-    }
-
-
     public Cart getCart() {
         return cart;
     }
@@ -81,5 +68,13 @@ public class CartItem {
 
     public void setVariation(Variation variation) {
         this.variation = variation;
+    }
+
+    public Long getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(Long discountPrice) {
+        this.discountPrice = discountPrice;
     }
 }

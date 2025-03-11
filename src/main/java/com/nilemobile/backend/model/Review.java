@@ -22,6 +22,11 @@ public class Review {
     @JoinColumn(name = "variation_id")
     private Variation variation;
 
+    @Column(name = "content")
+    private String content;
+
+    private Float rating;
+
     @Size(max = 1000, message = "Review content must not exceed 1000 characters")
     public String getContent() {
         return content;
@@ -31,8 +36,6 @@ public class Review {
         this.content = content;
     }
 
-    @Column(name = "content")
-    private String content;
 
     private LocalDateTime createdAt;
 
@@ -66,5 +69,13 @@ public class Review {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }

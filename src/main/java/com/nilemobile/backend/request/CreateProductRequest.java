@@ -56,15 +56,15 @@ public class CreateProductRequest {
         return screenSize;
     }
 
-    public void setScreenSize(Float sreenSize) {
-        this.screenSize = sreenSize;
+    public void setScreenSize(Float screenSize) {
+        this.screenSize = screenSize;
     }
 
     public String getDisplayTech() {
         return displayTech;
     }
 
-    public void setDispplayTech(String displayTech) {
+    public void setDisplayTech(String displayTech) {
         this.displayTech = displayTech;
     }
 
@@ -156,12 +156,12 @@ public class CreateProductRequest {
         this.imageURL = imageURL;
     }
 
-    public String getThirdLevel() {
-        return thirdLevel;
+    public String getFirstLevel() {
+        return firstLevel;
     }
 
-    public void setThirdLevel(String thirdLevel) {
-        this.thirdLevel = thirdLevel;
+    public void setFirstLevel(String firstLevel) {
+        this.firstLevel = firstLevel;
     }
 
     public String getSecondLevel() {
@@ -172,11 +172,11 @@ public class CreateProductRequest {
         this.secondLevel = secondLevel;
     }
 
-    public String getFirstLevel() {
-        return firstLevel;
+    public String getThirdLevel() {
+        return thirdLevel;
     }
 
-    public void setFirstLevel(String firstLevel) {
-        this.firstLevel = firstLevel;
+    public void setThirdLevel(String thirdLevel) {
+        this.thirdLevel = thirdLevel;
     }
 }

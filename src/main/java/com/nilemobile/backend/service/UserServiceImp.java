@@ -2,6 +2,7 @@ package com.nilemobile.backend.service;
 
 import com.nilemobile.backend.config.JwtProvider;
 import com.nilemobile.backend.model.User;
+import com.nilemobile.backend.reponse.UserProfileDTO;
 import com.nilemobile.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +43,28 @@ public class UserServiceImp implements UserService {
             throw new UserException("User not found with email: " + email);
         }
         return user;
+    }
+
+    @Override
+    public UserProfileDTO updateProfile(Long userId, User user) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User existingUser = optionalUser.get();
+            existingUser.setFirstName(user.getFirstName());
+            existingUser.setLastName(user.getLastName());
+            existingUser.setEmail(user.getEmail());
+            existingUser.setPhoneNumber(user.getPhoneNumber());
+
+            User updatedUser =  userRepository.save(existingUser);
+            return new UserProfileDTO(
+                    updatedUser.getUserId(),
+                    updatedUser.getFirstName(),
+                    updatedUser.getLastName(),
+                    updatedUser.getEmail(),
+                    updatedUser.getPhoneNumber()
+            );
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 }

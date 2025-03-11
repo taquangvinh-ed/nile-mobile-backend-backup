@@ -51,9 +51,9 @@ public class CartItemServiceImp implements CartItemService {
         cartItem.setDiscountPrice(cartItem.getQuantity() * cartItem.getVariation().getDiscountPrice());
         if (cartItem.getVariation() != null) {
             long price = cartItem.getVariation().getPrice();
-            cartItem.setsubtotal(cartItem.getQuantity() * price);
+            cartItem.setSubtotal(cartItem.getQuantity() * price);
         } else {
-            cartItem.setsubtotal(0L);
+            cartItem.setSubtotal(0L);
         }
         CartItem saveCartItem = cartItemRepository.save(cartItem);
         Cart cart = saveCartItem.getCart();
@@ -75,7 +75,7 @@ public class CartItemServiceImp implements CartItemService {
 
         if (cartItem.getVariation() != null) {
             long price = cartItem.getVariation().getPrice();
-            cartItem.setsubtotal(price * cartItem.getQuantity());
+            cartItem.setSubtotal(price * cartItem.getQuantity());
         }
 
         CartItem updateCartItem = cartItemRepository.save(cartItem);

@@ -54,9 +54,14 @@ public class AuthController {
         String lastName = user.getLastName();
         String phoneNumber = user.getPhoneNumber();
 
-        User isEmailExist = userRepository.findByEmail(email);
-        if (isEmailExist != null) {
-            throw new UserException("Email is used by another person");
+//        User isEmailExist = userRepository.findByEmail(email);
+//        if (isEmailExist != null) {
+//            throw new UserException("Email is used by another person");
+//        }
+//
+        User isPhoneNumberExist = userRepository.findByPhoneNumber(phoneNumber);
+        if(isPhoneNumberExist != null){
+            throw new UserException("Phone number is used by another person");
         }
 
         User createdUser = new User();

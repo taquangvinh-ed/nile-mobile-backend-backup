@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -50,6 +52,7 @@ public class AuthController {
         String password = user.getPassword();
         String firstName = user.getFirstName();
         String lastName = user.getLastName();
+        String phoneNumber = user.getPhoneNumber();
 
         User isEmailExist = userRepository.findByEmail(email);
         if (isEmailExist != null) {
@@ -61,11 +64,13 @@ public class AuthController {
         createdUser.setPassword(passwordEncoder.encode(password));
         createdUser.setFirstName(firstName);
         createdUser.setLastName(lastName);
+        createdUser.setCreatedDateAt(LocalDateTime.now());
+        createdUser.setPhoneNumber(phoneNumber);
 
         User savedUser = userRepository.save(createdUser);
         Cart cart = cartService.createCart(savedUser);
 
-        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null); // Không cần password gốc
+        Authentication authentication = new UsernamePasswordAuthenticationToken(email, null);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);

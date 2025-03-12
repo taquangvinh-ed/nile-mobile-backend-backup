@@ -50,7 +50,7 @@ public class Order {
 
     @Column(name = "Status", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
-    private String status;
+    private OrderStatus status;
 
     public Long getTotalDiscountPrice() {
         return totalDiscountPrice;
@@ -118,13 +118,11 @@ public class Order {
         this.totalPrice = totalPrice;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status.name();
-    }
+
 
     public User getUser() {
         return user;
@@ -142,7 +140,7 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 }

@@ -8,7 +8,7 @@ import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.model.Order;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.repository.CartRepository;
-import com.nilemobile.backend.repository.OrderDTO;
+import com.nilemobile.backend.reponse.OrderDTO;
 import com.nilemobile.backend.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class OrderServiceImp implements OrderService {
             order.setShippingAddress(shippingAddress);
             order.setOrderDate(LocalDateTime.now());
             order.setCreateAt(LocalDateTime.now());
-            order.setStatus(OrderStatus.PLACED.name());
+            order.setStatus(OrderStatus.PLACED);
 
             long totalPrice = cartService.calculateTotalPrice(cart.getCartId());
             int totalItem = cartService.getTotalItems(cart.getCartId());

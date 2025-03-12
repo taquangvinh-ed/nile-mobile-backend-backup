@@ -5,7 +5,7 @@ import com.nilemobile.backend.model.Order;
 import com.nilemobile.backend.model.OrderDetail;
 import com.nilemobile.backend.reponse.AddressDTO;
 import com.nilemobile.backend.reponse.OrderDetailDTO;
-import com.nilemobile.backend.repository.OrderDTO;
+import com.nilemobile.backend.reponse.OrderDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public class OrderMapper {
         dto.setTotalPrice(order.getTotalPrice());
         dto.setTotalDiscountPrice(order.getTotalDiscountPrice());
         dto.setTotalItem(order.getTotalItem());
-        dto.setStatus(order.getStatus());
+        dto.setStatus(order.getStatus().name());
         dto.setUserId(order.getUser().getUserId());
         dto.setShippingAddress(toAddressDTO(order.getShippingAddress()));
         dto.setOrderDetails(toOrderDetailDTOs(order.getOrderDetails()));

@@ -1,7 +1,4 @@
-package com.nilemobile.backend.repository;
-
-import com.nilemobile.backend.reponse.AddressDTO;
-import com.nilemobile.backend.reponse.OrderDetailDTO;
+package com.nilemobile.backend.reponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

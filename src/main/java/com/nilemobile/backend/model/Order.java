@@ -1,7 +1,10 @@
 package com.nilemobile.backend.model;
 
+import com.nilemobile.backend.contant.OrderStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,21 +13,17 @@ import java.util.List;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", length = 36)
+    @Column(name = "order_id")
     private Long id;
 
     @Column(name = "OrderDate", nullable = false)
     private LocalDateTime orderDate;
 
     @Column(name = "TotalPrice", nullable = false)
-    private long totalPrice;
+    private Long totalPrice;
 
     @Column(name = "TotalDiscountPrice", nullable = false)
-    private long totalDiscountPrice;
-
-
-    @Column(name = "Status", length = 20, nullable = false)
-    private String status;
+    private Long totalDiscountPrice;
 
     @ManyToOne
     @JoinColumn(name = "U_ID", nullable = false)
@@ -39,11 +38,25 @@ public class Order {
     })
     PaymentDetails paymentDetails = new PaymentDetails();
 
-    public long getTotalDiscountPrice() {
+    @OneToOne
+    @JoinColumn(name = "addressId", referencedColumnName = "address_id")
+    private Address shippingAddress;
+
+    private int totalItem;
+
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createAt;
+
+    @Column(name = "Status", length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private String status;
+
+    public Long getTotalDiscountPrice() {
         return totalDiscountPrice;
     }
 
-    public void setTotalDiscountPrice(long totalDiscountPrice) {
+    public void setTotalDiscountPrice(Long totalDiscountPrice) {
         this.totalDiscountPrice = totalDiscountPrice;
     }
 
@@ -79,13 +92,7 @@ public class Order {
         this.createAt = createAt;
     }
 
-    @OneToOne
-    @JoinColumn(name = "addressId", referencedColumnName = "address_id")
-    private Address shippingAddress;
 
-    private int totalItem;
-
-    private LocalDateTime createAt;
 
     public Long getId() {
         return id;
@@ -103,11 +110,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public long getTotalPrice() {
+    public Long getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(long totalPrice) {
+    public void setTotalPrice(Long totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -115,8 +122,8 @@ public class Order {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(OrderStatus status) {
+        this.status = status.name();
     }
 
     public User getUser() {
@@ -135,4 +142,7 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

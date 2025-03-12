@@ -2,8 +2,13 @@ package com.nilemobile.backend.service;
 
 import com.nilemobile.backend.exception.ProductException;
 import com.nilemobile.backend.model.Cart;
+import com.nilemobile.backend.model.Order;
+import com.nilemobile.backend.model.OrderDetail;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.request.AddCartItemRequest;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 public interface CartService {
 
@@ -15,4 +20,13 @@ public interface CartService {
 
 
     public void clearCart(Long userId) throws ProductException;
+
+    long calculateTotalPrice(Long cartId);
+
+    int getTotalItems(Long cartId);
+
+    long getTotalDiscount(Long cartId);
+
+    @Transactional
+    List<OrderDetail> convertCartToOrderDetails(Cart cart, Order order);
 }

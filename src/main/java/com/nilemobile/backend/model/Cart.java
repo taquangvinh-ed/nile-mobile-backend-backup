@@ -92,7 +92,6 @@ public class Cart {
         this.subtotal = cartItems.stream()
                 .mapToLong(CartItem::getSubtotal)
                 .sum();
-        this.totalItems = cartItems.size();
         this.totalDiscountPrice = cartItems.stream()
                 .mapToLong(CartItem::getDiscountPrice)
                 .sum();

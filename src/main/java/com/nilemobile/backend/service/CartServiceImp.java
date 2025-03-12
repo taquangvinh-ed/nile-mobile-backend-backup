@@ -4,9 +4,12 @@ import com.nilemobile.backend.exception.CartException;
 import com.nilemobile.backend.exception.ProductException;
 import com.nilemobile.backend.model.*;
 import com.nilemobile.backend.repository.CartRepository;
-import com.nilemobile.backend.request.AddCartItemRequest;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CartServiceImp implements CartService {
@@ -20,6 +23,7 @@ public class CartServiceImp implements CartService {
 
     private VariationService variationService;
 
+    @Autowired
     public CartServiceImp(CartRepository cartRepository, CartItemService cartItemService, ProductService productService, VariationService variationService) {
         this.cartRepository = cartRepository;
         this.cartItemService = cartItemService;
@@ -54,38 +58,6 @@ public class CartServiceImp implements CartService {
         return cartRepository.save(cart);
     }
 
-//    @Override
-//    public String addCartItem(Long userId, AddCartItemRequest addCartItemRequest) throws ProductException {
-//        if (userId == null || addCartItemRequest == null) {
-//            throw new IllegalArgumentException("UserId or AddCartItemRequest cannot be null");
-//        }
-//
-//        Cart cart = findUserCart(userId);
-//        if (cart == null) {
-//            throw new ProductException("Cart not found for user with id: " + userId);
-//        }
-//
-//        Variation variation = variationService.findVariationById(addCartItemRequest.getVariationId());
-//
-//        Product product = productService.findProductById(addCartItemRequest.getProductId());
-//        if (!variation.getProduct().getId().equals(product.getId())) {
-//            throw new ProductException("Variation does not belong to the specified product");
-//        }
-//
-//        CartItem cartItem = new CartItem();
-//        cartItem.setCart(cart);
-//        cartItem.setVariation(variation);
-//        cartItem.setQuantity(addCartItemRequest.getQuantity());
-//        cartItem.setSubtotal(addCartItemRequest.getQuantity() * variation.getPrice());
-//
-//        CartItem savedCartItem = cartItemService.createCartItem(cartItem, userId);
-//
-//        cart.getCartItems().add(savedCartItem);
-//        cart.calculateSubtotal();
-//        cartRepository.save(cart);
-//        return ("CartItem was added successfully!");
-//    }
-
     @Override
     public Cart findUserCart(Long userId) {
         Cart cart = cartRepository.findCartByUserId(userId);
@@ -94,7 +66,51 @@ public class CartServiceImp implements CartService {
 
 
     @Override
+    @Transactional
     public void clearCart(Long userId) throws ProductException {
+        if (userId == null) {
+            throw new IllegalArgumentException("UserId cannot be null");
+        }
+        Cart cart = cartRepository.findCartByUserId(userId);
+        if (cart == null) {
+            throw new CartException("Cart not found for user ID: " + userId);
+        }
+        cart.getCartItems().clear();
+        cart.setSubtotal(0L);
+        cart.setTotalItems(0);
+        cart.setTotalDiscountPrice(0L);
+        cartRepository.save(cart);
+    }
 
+    @Override
+    public long calculateTotalPrice(Long cartId) {
+        Cart cart = getCartById(cartId);
+        return cart.getSubtotal();
+    }
+
+    @Override
+    public int getTotalItems(Long cartId) {
+        Cart cart = getCartById(cartId);
+        return cart.getTotalItems();
+    }
+
+    @Override
+    public long getTotalDiscount(Long cartId){
+        Cart cart = getCartById(cartId);
+        return cart.getTotalDiscountPrice();
+    }
+    @Transactional
+    @Override
+    public List<OrderDetail> convertCartToOrderDetails(Cart cart, Order order) {
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItem cartItem : cart.getCartItems()) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setVariation(cartItem.getVariation());
+            orderDetail.setQuantity(cartItem.getQuantity());
+            orderDetail.setSubtotal(cartItem.getSubtotal());
+            orderDetails.add(orderDetail);
+        }
+        return orderDetails;
     }
 }

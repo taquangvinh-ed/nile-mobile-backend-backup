@@ -14,15 +14,15 @@ public class JwtProvider {
     SecretKey key = Keys.hmacShaKeyFor(JwtContant.SECRET_KEY.getBytes());
 
     public String generateToken(Authentication authentication) {
-        String jwt = Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime() + 846000000)).claim("email", authentication.getName()).signWith(key).compact();
+        String jwt = Jwts.builder().setIssuedAt(new Date()).setExpiration(new Date(new Date().getTime() + 846000000)).claim("phoneNumber", authentication.getName()).signWith(key).compact();
         return jwt;
     }
 
-    public String getEmailfromToken(String jwt) {
+    public String getPhoneNumberfromToken(String jwt) {
         jwt = jwt.substring(7);
         Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-        String email = String.valueOf(claims.get("email"));
-        return email;
+        String phoneNumber = String.valueOf(claims.get("phoneNumber"));
+        return phoneNumber;
     }
 
 }

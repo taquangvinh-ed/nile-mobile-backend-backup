@@ -9,4 +9,7 @@ public interface UserService {
     public User findUserProfileByJwt(String jwt) throws UserException;
 
     public UserProfileDTO updateProfile(Long userId, User user);
+
+    public User findByPhoneNumber(String phoneNumber);
+
 }

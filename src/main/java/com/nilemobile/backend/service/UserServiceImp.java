@@ -67,4 +67,9 @@ public class UserServiceImp implements UserService {
             throw new RuntimeException("User not found");
         }
     }
+
+    @Override
+    public User findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
+    }
 }

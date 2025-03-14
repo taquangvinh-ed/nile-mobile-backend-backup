@@ -85,4 +85,10 @@ public class UserProductController {
         return ResponseEntity.ok(productResponseDTOs);
     }
 
+    @GetMapping("/products/third-levels")
+    public ResponseEntity<List<String>> getAllThirdLevels() {
+        List<String> thirdLevels = productService.getAllThirdLevels();
+        return ResponseEntity.ok(thirdLevels);
+    }
+
 }

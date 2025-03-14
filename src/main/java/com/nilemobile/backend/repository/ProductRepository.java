@@ -13,20 +13,30 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p " +
+    @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN p.variations v " +
             "JOIN p.categories c " +
-            "WHERE (:firstLevel IS NULL OR c.parentCategory.parentCategory.name = :firstLevel) " +
-            "AND (:secondLevel IS NULL OR c.parentCategory.name = :secondLevel) " +
+            "LEFT JOIN c.parentCategory pc2 " +
+            "LEFT JOIN pc2.parentCategory pc1 " +
+            "WHERE (:firstLevel IS NULL OR pc1.name = :firstLevel) " +
+            "AND (:secondLevel IS NULL OR pc2.name = :secondLevel) " +
             "AND (:thirdLevel IS NULL OR c.name = :thirdLevel) " +
             "AND (:ram IS NULL OR v.ram IN :ram) " +
+            "AND (:rom IS NULL OR v.rom IN :rom) " +
+            "AND (:os IS NULL OR p.os = :os) " +
+            "AND (:minBattery IS NULL OR p.batteryCapacity >= :minBattery) " +
+            "AND (:maxBattery IS NULL OR p.batteryCapacity <= :maxBattery) " +
+            "AND (:minScreenSize IS NULL OR p.screenSize >= :minScreenSize) " +
+            "AND (:maxScreenSize IS NULL OR p.screenSize <= :maxScreenSize) " +
             "AND (:minPrice IS NULL OR v.price >= :minPrice) " +
             "AND (:maxPrice IS NULL OR v.price <= :maxPrice) " +
+            "AND (:minDiscount IS NULL OR v.discountPercent >= :minDiscount) " +
             "AND (v IS NOT NULL AND v.stockQuantity > 0) " +
-            "GROUP BY p.id, p.name, p.screenSize, p.displayTech, p.resolution, p.refreshRate, p.frontCamera, p.backCamera, p.chipset, p.batteryCapacity, p.chargingPort, p.os, p.productSize, p.productWeight, p.description, p.imageURL, p.createAt, c.id " +
-            "ORDER BY CASE WHEN :sort = 'price_asc' THEN MIN(v.price) END ASC, " +
-            "         CASE WHEN :sort = 'price_desc' THEN MIN(v.price) END DESC, " +
-            "         CASE WHEN :sort = 'newest' THEN p.createAt END DESC")
+            "ORDER BY CASE WHEN :sort = 'price_asc' THEN " +
+            "  (SELECT MIN(v2.price) FROM Variation v2 WHERE v2.product = p) END ASC, " +
+            "CASE WHEN :sort = 'price_desc' THEN " +
+            "  (SELECT MIN(v2.price) FROM Variation v2 WHERE v2.product = p) END DESC, " +
+            "CASE WHEN :sort = 'newest' THEN p.createAt END DESC")
     Page<Product> filterProducts(
             @Param("firstLevel") String firstLevel,
             @Param("secondLevel") String secondLevel,
@@ -43,5 +53,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("minDiscount") Integer minDiscount,
             @Param("sort") String sort,
             Pageable pageable);
+
+    @Query("SELECT DISTINCT c.name " +
+            "FROM Product p " +
+            "JOIN p.categories c " +
+            "WHERE c.level = 3")
+    List<String> findDistinctThirdLevels();
 
 }

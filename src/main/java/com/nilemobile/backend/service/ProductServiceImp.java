@@ -423,4 +423,8 @@ public Page<Product> getAllProducts(String firstLevel, String secondLevel, Strin
             pageable
     );
 }
+
+    @Override
+    public List<String> getAllThirdLevels() {
+        return productRepository.findDistinctThirdLevels();    }
 }

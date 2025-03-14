@@ -27,8 +27,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/products/third-levels").permitAll()
+                        .requestMatchers("/api/products/filter").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
+
+
                 ).addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))

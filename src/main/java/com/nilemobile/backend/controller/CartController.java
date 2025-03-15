@@ -35,7 +35,7 @@ public class CartController {
 
         List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(cartItem -> {
             VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
-            return new CartItemDTO(cartItem.getId(),variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice());
+            return new CartItemDTO(variationDTO.getName(), cartItem.getId(),variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice());
         }).collect(Collectors.toList());
 
         CartDTO cartDTO = new CartDTO(cart.getSubtotal(),

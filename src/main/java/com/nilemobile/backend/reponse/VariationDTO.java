@@ -4,6 +4,7 @@ import com.nilemobile.backend.model.Variation;
 
 public class VariationDTO {
     private Long id;
+    private String name;
     private String color;
     private String ram;
     private String rom;
@@ -16,7 +17,8 @@ public class VariationDTO {
     public VariationDTO() {
     }
 
-    public VariationDTO(Long id, String color, String ram, String rom, Long price, Long discountPrice, int discountPercent, Integer stockQuantity, String imageURL) {
+    public VariationDTO(Long id, String name, String color, String ram, String rom, Long price, Long discountPrice, int discountPercent, Integer stockQuantity, String imageURL) {
+        this.name = name;
         this.id = id;
         this.color = color;
         this.ram = ram;
@@ -30,6 +32,7 @@ public class VariationDTO {
 
     public VariationDTO(Variation variation) {
         this.id = variation.getId();
+        this.name=variation.getProduct().getName();
         this.color = variation.getColor();
         this.ram = variation.getRam();
         this.rom = variation.getRom();
@@ -46,6 +49,14 @@ public class VariationDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getColor() {

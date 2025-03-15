@@ -82,6 +82,7 @@ public class CartItemController {
         long discountPrice = (long) (cartItem.getVariation().getPrice() * (cartItem.getVariation().getDiscountPercent() / 100.0)) * cartItem.getQuantity();
 
         CartItemDTO cartItemDTO = new CartItemDTO(
+                variationDTO.getName(),
                 cartItem.getId(),
                 variationDTO,
                 cartItem.getQuantity(),

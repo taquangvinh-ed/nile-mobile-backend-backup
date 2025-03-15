@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 public class CartItemDTO {
     private Long id;
 
+    private String name;
+
     VariationDTO variation;
 
     private Integer quantity;
@@ -16,7 +18,8 @@ public class CartItemDTO {
     public CartItemDTO() {
     }
 
-    public CartItemDTO(Long id, VariationDTO variation, Integer quantity, long subtotal, Long discountPrice) {
+    public CartItemDTO(String name, Long id, VariationDTO variation, Integer quantity, long subtotal, Long discountPrice) {
+        this.name = variation.getName();
         this.id = id;
         this.variation = variation;
         this.quantity = quantity;

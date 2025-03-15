@@ -9,6 +9,7 @@ public class AddressDTO {
     private String ward;
     private String district;
     private String province;
+    private Boolean isDefault;
 
     public AddressDTO() {}
 
@@ -36,4 +37,11 @@ public class AddressDTO {
     public String getProvince() { return province; }
     public void setProvince(String province) { this.province = province; }
 
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
 }

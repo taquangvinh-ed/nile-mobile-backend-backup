@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class CartItemServiceImp implements CartItemService {
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private final CartItemRepository cartItemRepository;
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
     public CartItemServiceImp(CartItemRepository cartItemRepository, UserService userService, CartRepository cartRepository) {
         this.cartItemRepository = cartItemRepository;
@@ -42,7 +42,16 @@ public class CartItemServiceImp implements CartItemService {
         // Tải cart cùng với cartItems và variation
         Cart cart = cartRepository.findByCartIdWithItems(cartItem.getCart().getCartId())
                 .orElseThrow(() -> new CartItemException("Cart not found with ID: " + cartItem.getCart().getCartId()));
-        cart.setUser(user); // Đảm bảo user được gán
+
+        // Kiểm tra xem cart đã thuộc về user khác hay chưa
+        if (cart.getUser() != null && !cart.getUser().getUserId().equals(userId)) {
+            throw new CartItemException("Cart with ID " + cart.getCartId() + " belongs to another user.");
+        }
+
+        // Chỉ gán user nếu cart chưa có user
+        if (cart.getUser() == null) {
+            cart.setUser(user);
+        }
 
         boolean exists = isCartItemExist(cart, cartItem.getVariation(), userId);
         if (exists) {
@@ -56,7 +65,6 @@ public class CartItemServiceImp implements CartItemService {
                 existingCartItem.setSubtotal(existingCartItem.getQuantity() * price);
                 CartItem updatedCartItem = cartItemRepository.save(existingCartItem);
                 cart = updatedCartItem.getCart();
-                cart.setUser(user);
                 cart.calculateSubtotal();
                 cartRepository.save(cart);
                 return updatedCartItem;
@@ -73,7 +81,6 @@ public class CartItemServiceImp implements CartItemService {
         }
         cartItem.setCart(cart); // Gán cart cho cartItem
         CartItem saveCartItem = cartItemRepository.save(cartItem);
-        cart.setUser(user);
         cart.calculateSubtotal();
         cartRepository.save(cart);
         return saveCartItem;

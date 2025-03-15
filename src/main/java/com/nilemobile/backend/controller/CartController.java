@@ -29,21 +29,20 @@ public class CartController {
     }
 
     @GetMapping
-    public ResponseEntity<CartDTO>getCart(@RequestHeader("Authorization") String jwt)throws UserException {
+    public ResponseEntity<CartDTO> getCart(@RequestHeader("Authorization") String jwt) throws UserException {
         User user = userService.findUserProfileByJwt(jwt);
         Cart cart = cartService.findUserCart(user.getUserId());
 
         List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(cartItem -> {
             VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
-            CartItemDTO cartItemDTO = new CartItemDTO(variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice());
-            return cartItemDTO;
+            return new CartItemDTO(cartItem.getId(),variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice());
         }).collect(Collectors.toList());
 
         CartDTO cartDTO = new CartDTO(cart.getSubtotal(),
-                                        cart.getTotalDiscountPrice(),
-                                        cart.getTotalDiscountPercent(),
-                                        cart.getTotalItems(),
-        cartItemDTOs);
-        return new ResponseEntity<>(cartDTO,HttpStatus.OK);
+                cart.getTotalDiscountPrice(),
+                cart.getTotalDiscountPercent(),
+                cart.getTotalItems(),
+                cartItemDTOs);
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 }

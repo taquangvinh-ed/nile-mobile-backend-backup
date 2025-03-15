@@ -5,21 +5,18 @@ import java.util.List;
 
 public class CartDTO {
     private long subtotal;
-
     private Long totalDiscountPrice;
-
     private int totalDiscountPercent;
-
     private int totalItems;
-
     private List<CartItemDTO> cartItems;
 
-    public CartDTO(long subtotal, Long totalDiscountPrice, int totalDiscountPercent, int totalItems, List<CartItemDTO> cartItem) {
+    public CartDTO(long subtotal, Long totalDiscountPrice, int totalDiscountPercent, int totalItems, List<CartItemDTO> cartItems) {
         this.subtotal = subtotal;
         this.totalDiscountPrice = totalDiscountPrice;
         this.totalDiscountPercent = totalDiscountPercent;
         this.totalItems = totalItems;
-        this.cartItems = (cartItem != null) ? new ArrayList<>(cartItem) : new ArrayList<>();    }
+        this.cartItems = (cartItems != null) ? new ArrayList<>(cartItems) : new ArrayList<>();
+    }
 
     public CartDTO() {
     }
@@ -56,11 +53,11 @@ public class CartDTO {
         this.totalItems = totalItems;
     }
 
-    public List<CartItemDTO> getCartItem() {
+    public List<CartItemDTO> getCartItems() { // Đổi thành getCartItems
         return cartItems;
     }
 
-    public void setCartItem(List<CartItemDTO> cartItems) {
+    public void setCartItems(List<CartItemDTO> cartItems) { // Đổi thành setCartItems
         this.cartItems = cartItems;
     }
 }

@@ -61,6 +61,24 @@ public class CartServiceImp implements CartService {
     @Override
     public Cart findUserCart(Long userId) {
         Cart cart = cartRepository.findCartByUserId(userId);
+        cart.setTotalItems(cart.getCartItems().size());
+        long subtotal = 0;
+        long totalDiscountPrice = 0;
+        int totalItems = cart.getCartItems().size();
+
+        for (CartItem item : cart.getCartItems()) {
+            long itemSubtotal = item.getVariation().getPrice() * item.getQuantity();
+            long itemDiscountPrice = (long) (item.getVariation().getPrice() * (item.getVariation().getDiscountPercent() / 100.0)) * item.getQuantity();
+            item.setSubtotal(itemSubtotal);
+            item.setDiscountPrice(itemDiscountPrice);
+            subtotal += itemSubtotal;
+            totalDiscountPrice += itemDiscountPrice;
+        }
+
+        cart.setSubtotal(subtotal);
+        cart.setTotalDiscountPrice(totalDiscountPrice);
+        cart.setTotalItems(totalItems);
+        cart.setTotalDiscountPercent(5);
         return cart;
     }
 

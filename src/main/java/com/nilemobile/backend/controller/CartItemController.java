@@ -1,8 +1,10 @@
 package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.exception.CartItemException;
+import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.model.CartItem;
 import com.nilemobile.backend.model.User;
+import com.nilemobile.backend.repository.CartRepository;
 import com.nilemobile.backend.request.AddCartItemRequest;
 import com.nilemobile.backend.reponse.CartItemDTO;
 import com.nilemobile.backend.reponse.VariationDTO;
@@ -14,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cart/items") // Thêm dấu "/" đầu tiên
+@RequestMapping("/api/cart/items")
 public class CartItemController {
 
     @Autowired
@@ -23,6 +25,9 @@ public class CartItemController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CartRepository cartRepository;
+
     @PostMapping
     public ResponseEntity<CartItemDTO> addCartItemToCart(
             @RequestHeader("Authorization") String jwt,
@@ -30,10 +35,16 @@ public class CartItemController {
         User user = userService.findUserProfileByJwt(jwt);
         Long userId = user.getUserId();
 
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    return cartRepository.save(newCart);
+                });
+
         CartItem cartItem = new CartItem();
         cartItem.setVariation(req.getVariation());
-        cartItem.setCart(req.getCart());
-
+        cartItem.setCart(cart);
         CartItem createdCartItem = cartItemService.createCartItem(cartItem, userId);
 
         CartItemDTO cartItemDTO = convertToDTO(createdCartItem);
@@ -62,19 +73,21 @@ public class CartItemController {
         Long userId = user.getUserId();
 
         cartItemService.removeCartItem(userId, cartItemId);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private CartItemDTO convertToDTO(CartItem cartItem) {
         VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
+        long subtotal = cartItem.getVariation().getPrice() * cartItem.getQuantity();
+        long discountPrice = (long) (cartItem.getVariation().getPrice() * (cartItem.getVariation().getDiscountPercent() / 100.0)) * cartItem.getQuantity();
+
         CartItemDTO cartItemDTO = new CartItemDTO(
+                cartItem.getId(),
                 variationDTO,
                 cartItem.getQuantity(),
-                cartItem.getSubtotal(),
-                variationDTO.getDiscountPrice()
+                subtotal,
+                discountPrice
         );
-        cartItemDTO.setDiscountPrice(cartItem.getDiscountPrice());
         return cartItemDTO;
     }
 }

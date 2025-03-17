@@ -39,7 +39,7 @@ public class Variation {
     @Column(name = "imageURL", length = 1000)
     private String imageURL;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 

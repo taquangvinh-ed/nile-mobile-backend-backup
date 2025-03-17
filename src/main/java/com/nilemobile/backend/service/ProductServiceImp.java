@@ -85,7 +85,7 @@ public class ProductServiceImp implements ProductService {
         product.setBatteryCapacity(parseInt(request.getBatteryCapacity(), "Dung lượng pin"));
         product.setChargingPort(request.getChargingPort());
         product.setOs(request.getOs());
-        product.setProductSize(parseFloat(request.getProductSize(), "Kích thước sản phẩm"));
+        product.setProductSize(request.getProductSize());
         product.setProductWeight(parseFloat(request.getProductWeight(), "Trọng lượng sản phẩm"));
         product.setImageURL(request.getImageURL());
         product.setCategories(thirdLevel != null ? thirdLevel : (secondLevel != null ? secondLevel : firstLevel));
@@ -119,6 +119,7 @@ public class ProductServiceImp implements ProductService {
             throw new ProductException(fieldName + " phải là số nguyên hợp lệ");
         }
     }
+
     @Override
     public void deleteProduct(Long productId) throws ProductException {
         try {
@@ -393,38 +394,39 @@ public class ProductServiceImp implements ProductService {
 //        return new PageImpl<>(pagedProducts, pageable, products.size());
 //    }
 
-@Override
-public Page<Product> getAllProducts(String firstLevel, String secondLevel, String thirdLevel,
-                                    List<String> ram, List<String> rom, String os,
-                                    Integer minBattery, Integer maxBattery, Float minScreenSize, Float maxScreenSize,
-                                    Long minPrice, Long maxPrice, Integer minDiscount, String sort,
-                                    Integer pageNumber, Integer pageSize) {
+    @Override
+    public Page<Product> getAllProducts(String firstLevel, String secondLevel, String thirdLevel,
+                                        List<String> ram, List<String> rom, String os,
+                                        Integer minBattery, Integer maxBattery, Float minScreenSize, Float maxScreenSize,
+                                        Long minPrice, Long maxPrice, Integer minDiscount, String sort,
+                                        Integer pageNumber, Integer pageSize) {
 
-    pageNumber = (pageNumber != null && pageNumber >= 0) ? pageNumber : 0;
-    pageSize = (pageSize != null && pageSize > 0) ? pageSize : 10;
+        pageNumber = (pageNumber != null && pageNumber >= 0) ? pageNumber : 0;
+        pageSize = (pageSize != null && pageSize > 0) ? pageSize : 10;
 
-    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-    return productRepository.filterProducts(
-            firstLevel != null && !firstLevel.trim().isEmpty() ? firstLevel : null,
-            secondLevel != null && !secondLevel.trim().isEmpty() ? secondLevel : null,
-            thirdLevel != null && !thirdLevel.trim().isEmpty() ? thirdLevel : null,
-            ram != null && !ram.isEmpty() ? ram : null,
-            rom != null && !rom.isEmpty() ? rom : null,
-            os != null && !os.trim().isEmpty() ? os : null,
-            minBattery,
-            maxBattery,
-            minScreenSize,
-            maxScreenSize,
-            minPrice,
-            maxPrice,
-            minDiscount,
-            sort,
-            pageable
-    );
-}
+        return productRepository.filterProducts(
+                firstLevel != null && !firstLevel.trim().isEmpty() ? firstLevel : null,
+                secondLevel != null && !secondLevel.trim().isEmpty() ? secondLevel : null,
+                thirdLevel != null && !thirdLevel.trim().isEmpty() ? thirdLevel : null,
+                ram != null && !ram.isEmpty() ? ram : null,
+                rom != null && !rom.isEmpty() ? rom : null,
+                os != null && !os.trim().isEmpty() ? os : null,
+                minBattery,
+                maxBattery,
+                minScreenSize,
+                maxScreenSize,
+                minPrice,
+                maxPrice,
+                minDiscount,
+                sort,
+                pageable
+        );
+    }
 
     @Override
     public List<String> getAllThirdLevels() {
-        return productRepository.findDistinctThirdLevels();    }
+        return productRepository.findDistinctThirdLevels();
+    }
 }

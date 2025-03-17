@@ -29,33 +29,33 @@ public class Product {
     @Column(name = "displayTech")
     private String displayTech;
 
-    @Column(name = "resolution", length = 20)
+    @Column(name = "resolution", length = 100)
     private String resolution;
 
-    @Column(name = "refreshRate", length = 20)
+    @Column(name = "refreshRate", length = 100)
     private String refreshRate;
 
-    @Column(name = "frontCamera", length = 50)
+    @Column(name = "frontCamera", length = 100)
     private String frontCamera;
 
-    @Column(name = "backCamera", length = 50)
+    @Column(name = "backCamera", length = 100)
     private String backCamera;
 
-    @Column(name = "chipset", length = 50)
+    @Column(name = "chipset", length = 100)
     private String chipset;
 
     @Column(name = "BatteryCapacity", length = 20)
     @Positive(message = "Dung lượng pin phải là số dương")
     private Integer batteryCapacity;
 
-    @Column(name = "chargingPort", length = 20)
+    @Column(name = "chargingPort", length = 100)
     private String chargingPort;
 
-    @Column(name = "OS", length = 20)
+    @Column(name = "OS", length = 100)
     private String os;
 
-    @Column(name = "productSize", length = 20)
-    private Float productSize;
+    @Column(name = "productSize", length = 100)
+    private String productSize;
 
     @Column(name = "productWeight", length = 20)
     private Float productWeight;
@@ -173,11 +173,11 @@ public class Product {
         this.os = os;
     }
 
-    public Float getProductSize() {
+    public String getProductSize() {
         return productSize;
     }
 
-    public void setProductSize(Float productSize) {
+    public void setProductSize(String productSize) {
         this.productSize = productSize;
     }
 

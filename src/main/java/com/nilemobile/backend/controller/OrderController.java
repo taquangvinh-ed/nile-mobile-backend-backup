@@ -28,7 +28,7 @@ public class OrderController {
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId, @RequestBody Address shippingAddress) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId, @RequestBody(required = false) Address shippingAddress) {
         try {
             User user = userService.findUserById(userId);
             if (user == null) {
@@ -148,6 +148,17 @@ public class OrderController {
         try {
             List<OrderDTO> orderDTOs = orderService.filterOrderByStatus(status);
             return ResponseEntity.ok(orderDTOs);
+        } catch (Orderexception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/{orderId}/update-shipping-address")
+    public ResponseEntity<OrderDTO> updateShippingAddress(@PathVariable Long orderId, @RequestBody Address shippingAddress) {
+        try {
+            Order order = orderService.updateShippingAddress(orderId, shippingAddress);
+            OrderDTO orderDTO = OrderMapper.toDTO(order);
+            return ResponseEntity.ok(orderDTO);
         } catch (Orderexception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

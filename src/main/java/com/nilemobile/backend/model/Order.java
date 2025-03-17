@@ -36,10 +36,10 @@ public class Order {
     @AttributeOverrides({
             @AttributeOverride(name = "status", column = @Column(name = "payment_status", length = 20, nullable = false))
     })
-    PaymentDetails paymentDetails = new PaymentDetails();
+    PaymentDetails paymentDetails = new PaymentDetails(PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.PENDING, null, null, null, null);
 
     @OneToOne
-    @JoinColumn(name = "addressId", referencedColumnName = "address_id")
+    @JoinColumn(name = "addressId", referencedColumnName = "address_id", nullable = true)
     private Address shippingAddress;
 
     private int totalItem;
@@ -51,6 +51,25 @@ public class Order {
     @Column(name = "Status", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    public Order() {
+        this.status = OrderStatus.PLACED;
+        this.paymentDetails = new PaymentDetails(PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.PENDING, null, null, null, null);
+    }
+
+    public Order(Long id, LocalDateTime orderDate, Long totalPrice, Long totalDiscountPrice, User user, List<OrderDetail> orderDetails, PaymentDetails paymentDetails, Address shippingAddress, int totalItem, LocalDateTime createAt, OrderStatus status) {
+        this.id = id;
+        this.orderDate = orderDate;
+        this.totalPrice = totalPrice;
+        this.totalDiscountPrice = totalDiscountPrice;
+        this.user = user;
+        this.orderDetails = orderDetails;
+        this.paymentDetails = paymentDetails;
+        this.shippingAddress = shippingAddress;
+        this.totalItem = totalItem;
+        this.createAt = createAt;
+        this.status = status;
+    }
 
     public Long getTotalDiscountPrice() {
         return totalDiscountPrice;
@@ -93,7 +112,6 @@ public class Order {
     }
 
 
-
     public Long getId() {
         return id;
     }
@@ -121,7 +139,6 @@ public class Order {
     public OrderStatus getStatus() {
         return status;
     }
-
 
 
     public User getUser() {

@@ -82,6 +82,8 @@ public class ProductServiceImp implements ProductService {
         product.setFrontCamera(request.getFrontCamera());
         product.setBackCamera(request.getBackCamera());
         product.setChipset(request.getChipset());
+        product.setCpu(request.getCpu());
+        product.setGpu(request.getGpu());
         product.setBatteryCapacity(parseInt(request.getBatteryCapacity(), "Dung lượng pin"));
         product.setChargingPort(request.getChargingPort());
         product.setOs(request.getOs());
@@ -162,6 +164,15 @@ public class ProductServiceImp implements ProductService {
         if (product.getChipset() != null) {
             existingProduct.setChipset(product.getChipset());
         }
+
+        if (product.getCpu() != null) {
+            existingProduct.setChipset(product.getCpu());
+        }
+
+        if (product.getGpu() != null) {
+            existingProduct.setChipset(product.getGpu());
+        }
+
         if (product.getBatteryCapacity() != null) {
             existingProduct.setBatteryCapacity(product.getBatteryCapacity());
         }

@@ -18,6 +18,8 @@ public class CreateProductRequest {
     private String frontCamera;
     private String backCamera;
     private String chipset;
+    private String cpu;
+    private String gpu;
     private String batteryCapacity;
     private String chargingPort;
     private String os;
@@ -105,6 +107,22 @@ public class CreateProductRequest {
 
     public void setChipset(String chipset) {
         this.chipset = chipset;
+    }
+
+    public String getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(String cpu) {
+        this.cpu = cpu;
+    }
+
+    public String getGpu() {
+        return gpu;
+    }
+
+    public void setGpu(String gpu) {
+        this.gpu = gpu;
     }
 
     public String getBatteryCapacity() {

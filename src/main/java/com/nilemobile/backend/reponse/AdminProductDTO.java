@@ -1,83 +1,68 @@
-package com.nilemobile.backend.model;
+package com.nilemobile.backend.reponse;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import com.nilemobile.backend.model.Product;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity
-@Table(name = "PRODUCT")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id", length = 36)
+public class AdminProductDTO {
     private Long id;
-
-    @Column(name = "name", nullable = false)
-    @NotBlank(message = "Tên sản phẩm không được để trống")
-    @Size(max = 255, message = "Tên sản phẩm không được vượt quá 255 ký tự")
     private String name;
-
-    @Column(name = "screenSize", length = 20)
-    @Positive(message = "Kích thước màn hình phải là số dương")
+    private String categoryName;
     private Float screenSize;
-
-    @Column(name = "displayTech")
     private String displayTech;
-
-    @Column(name = "resolution", length = 100)
-    private String resolution;
-
-    @Column(name = "refreshRate", length = 100)
     private String refreshRate;
-
-    @Column(name = "frontCamera", length = 100)
+    private String resolution;
     private String frontCamera;
-
-    @Column(name = "backCamera", length = 100)
     private String backCamera;
-
-    @Column(name = "chipset", length = 100)
     private String chipset;
-
-    @Column(name = "cpu", length = 100)
     private String cpu;
-
-    @Column(name = "gpu", length = 100)
     private String gpu;
-
-    @Column(name = "BatteryCapacity", length = 20)
-    @Positive(message = "Dung lượng pin phải là số dương")
     private Integer batteryCapacity;
-
-    @Column(name = "chargingPort", length = 100)
     private String chargingPort;
-
-    @Column(name = "OS", length = 100)
     private String os;
-
-    @Column(name = "productSize", length = 100)
     private String productSize;
-
-    @Column(name = "productWeight", length = 20)
     private Float productWeight;
-
-    @Column(name = "description", length = 1000)
     private String description;
 
+    public AdminProductDTO(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.categoryName = product.getCategories() != null ? product.getCategories().getName() : null;;
+        this.screenSize = product.getScreenSize();
+        this.displayTech = product.getDisplayTech();
+        this.refreshRate = product.getRefreshRate();
+        this.resolution = product.getResolution();
+        this.frontCamera = product.getFrontCamera();
+        this.backCamera = product.getBackCamera();
+        this.chipset = product.getChipset();
+        this.cpu = product.getCpu();
+        this.gpu = product.getGpu();
+        this.batteryCapacity = product.getBatteryCapacity();
+        this.chargingPort = product.getChargingPort();
+        this.os = product.getOs();
+        this.productSize = product.getProductSize();
+        this.productWeight = product.getProductWeight();
+        this.description = product.getDescription();
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "categories_id", nullable = false)
-    private Categories categories;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Variation> variations = new ArrayList<>();
-
-    private LocalDateTime createAt;
+    public AdminProductDTO(Long id, String name, String categoryName, Float screenSize, String displayTech, String refreshRate, String resolution, String frontCamera, String backCamera, String chipset, String cpu, String gpu, Integer batteryCapacity, String chargingPort, String os, String productSize, Float productWeight, String description) {
+        this.id = id;
+        this.name = name;
+        this.categoryName = categoryName;
+        this.screenSize = screenSize;
+        this.displayTech = displayTech;
+        this.refreshRate = refreshRate;
+        this.resolution = resolution;
+        this.frontCamera = frontCamera;
+        this.backCamera = backCamera;
+        this.chipset = chipset;
+        this.cpu = cpu;
+        this.gpu = gpu;
+        this.batteryCapacity = batteryCapacity;
+        this.chargingPort = chargingPort;
+        this.os = os;
+        this.productSize = productSize;
+        this.productWeight = productWeight;
+        this.description = description;
+    }
 
     public Long getId() {
         return id;
@@ -93,6 +78,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Float getScreenSize() {
@@ -111,20 +104,20 @@ public class Product {
         this.displayTech = displayTech;
     }
 
-    public String getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(String resolution) {
-        this.resolution = resolution;
-    }
-
     public String getRefreshRate() {
         return refreshRate;
     }
 
     public void setRefreshRate(String refreshRate) {
         this.refreshRate = refreshRate;
+    }
+
+    public String getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(String resolution) {
+        this.resolution = resolution;
     }
 
     public String getFrontCamera() {
@@ -213,39 +206,5 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Variation> getVariations() {
-        return variations;
-    }
-
-    public void setVariations(List<Variation> variations) {
-        this.variations = variations;
-    }
-
-    public void setCategories(Categories categories) {
-        this.categories = categories;
-    }
-
-    public Categories getCategories() {
-        return categories;
-    }
-
-    public LocalDateTime getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
-    }
-
-    public void addVariation(Variation variation) {
-        variations.add(variation);
-        variation.setProduct(this);
-    }
-
-    public void removeVariation(Variation variation) {
-        variations.remove(variation);
-        variation.setProduct(null);
     }
 }

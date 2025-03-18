@@ -1,16 +1,8 @@
 package com.nilemobile.backend.request;
 
-import com.nilemobile.backend.model.Variation;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class CreateProductRequest {
+public class AdminCreateProductRequest {
     private String name;
     private String description;
-
-    private List<Variation> variations = new ArrayList<>();
-
     private Float screenSize;
     private String displayTech;
     private String resolution;
@@ -18,11 +10,13 @@ public class CreateProductRequest {
     private String frontCamera;
     private String backCamera;
     private String chipset;
-    private String batteryCapacity;
+    private String cpu;
+    private String gpu;
+    private Integer batteryCapacity;
     private String chargingPort;
     private String os;
     private String productSize;
-    private String productWeight;
+    private Float productWeight;
     private String firstLevel;
     private String secondLevel;
     private String thirdLevel;
@@ -41,14 +35,6 @@ public class CreateProductRequest {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Variation> getVariations() {
-        return variations;
-    }
-
-    public void setVariations(List<Variation> variations) {
-        this.variations = variations;
     }
 
     public Float getScreenSize() {
@@ -107,11 +93,27 @@ public class CreateProductRequest {
         this.chipset = chipset;
     }
 
-    public String getBatteryCapacity() {
+    public String getCpu() {
+        return cpu;
+    }
+
+    public void setCpu(String cpu) {
+        this.cpu = cpu;
+    }
+
+    public String getGpu() {
+        return gpu;
+    }
+
+    public void setGpu(String gpu) {
+        this.gpu = gpu;
+    }
+
+    public Integer getBatteryCapacity() {
         return batteryCapacity;
     }
 
-    public void setBatteryCapacity(String batteryCapacity) {
+    public void setBatteryCapacity(Integer batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
     }
 
@@ -139,11 +141,11 @@ public class CreateProductRequest {
         this.productSize = productSize;
     }
 
-    public String getProductWeight() {
+    public Float getProductWeight() {
         return productWeight;
     }
 
-    public void setProductWeight(String productWeight) {
+    public void setProductWeight(Float productWeight) {
         this.productWeight = productWeight;
     }
 

@@ -1,13 +1,25 @@
 package com.nilemobile.backend.reponse;
 
+import java.time.LocalDateTime;
+
 public class UserProfileDTO {
     private Long userId;
     private String firstName;
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String createdDateAt;
 
     public UserProfileDTO() {}
+
+    public UserProfileDTO(Long userId, String firstName, String lastName, String email, String phoneNumber, String createdDateAt) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.createdDateAt = createdDateAt;
+    }
 
     public UserProfileDTO(Long userId, String firstName, String lastName, String email, String phoneNumber) {
         this.userId = userId;
@@ -55,5 +67,13 @@ public class UserProfileDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getCreatedDateAt() {
+        return createdDateAt;
+    }
+
+    public void setCreatedDateAt(String createdDateAt) {
+        this.createdDateAt = createdDateAt;
     }
 }

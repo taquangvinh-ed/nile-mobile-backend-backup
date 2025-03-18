@@ -25,7 +25,6 @@ public class ProductResponseDTO {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
-        this.imageURL = product.getImageURL();
         this.screenSize = product.getScreenSize();
         this.batteryCapacity = product.getBatteryCapacity();
         this.os = product.getOs();

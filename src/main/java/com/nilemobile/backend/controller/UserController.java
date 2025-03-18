@@ -2,6 +2,7 @@ package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.UserProfileDTO;
+import com.nilemobile.backend.repository.UserRepository;
 import com.nilemobile.backend.service.UserException;
 import com.nilemobile.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileDTO> getMyProfile() throws UserException{
@@ -55,5 +61,20 @@ public class UserController {
     public ResponseEntity<UserProfileDTO> updateUserProfile(@PathVariable Long userId, @RequestBody User user) throws UserException {
         UserProfileDTO updatedUserProfile = userService.updateProfile(userId, user);
         return ResponseEntity.ok(updatedUserProfile);
+    }
+    @GetMapping("/get-all-users")
+    public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<User> users = userRepository.findAll();
+        List<UserProfileDTO> userProfiles = users.stream()
+                .map(user -> new UserProfileDTO(
+                        user.getUserId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getPhoneNumber(),
+                        user.getCreatedDateAt().format(formatter)))
+                .toList();
+        return ResponseEntity.ok(userProfiles);
     }
 }

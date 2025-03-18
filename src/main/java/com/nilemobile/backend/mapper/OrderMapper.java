@@ -55,6 +55,7 @@ public class OrderMapper {
             dto.setVariationId(detail.getVariation().getId());
             dto.setQuantity(detail.getQuantity());
             dto.setSubtotal(detail.getSubtotal());
+            dto.setImageURL(detail.getVariation().getImageURL());
             return dto;
         }).collect(Collectors.toList());
     }

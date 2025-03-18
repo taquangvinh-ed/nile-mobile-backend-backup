@@ -52,7 +52,7 @@ public class OrderServiceImp implements OrderService {
         order.setCreateAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PLACED);
 
-            
+
         long totalPrice = cartService.calculateTotalPrice(cart.getCartId());
         int totalItem = cartService.getTotalItems(cart.getCartId());
         long totalDiscount = cartService.getTotalDiscount(cart.getCartId());
@@ -194,6 +194,10 @@ public class OrderServiceImp implements OrderService {
 
         if (order.getStatus().equals(OrderStatus.SHIPPED) || order.getStatus().equals(OrderStatus.DELIVERED)) {
             throw new Orderexception("Không thể cập nhật địa chỉ cho đơn hàng đã giao.");
+        }
+
+        if (order.getShippingAddress() != null && order.getShippingAddress().equals(shippingAddress)) {
+            return order; // Giữ nguyên đơn hàng hiện tại, không cần lưu lại
         }
 
         order.setShippingAddress(shippingAddress);

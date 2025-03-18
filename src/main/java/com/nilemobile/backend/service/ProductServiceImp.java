@@ -87,7 +87,6 @@ public class ProductServiceImp implements ProductService {
         product.setOs(request.getOs());
         product.setProductSize(request.getProductSize());
         product.setProductWeight(parseFloat(request.getProductWeight(), "Trọng lượng sản phẩm"));
-        product.setImageURL(request.getImageURL());
         product.setCategories(thirdLevel != null ? thirdLevel : (secondLevel != null ? secondLevel : firstLevel));
         product.setCreateAt(LocalDateTime.now());
 
@@ -180,9 +179,6 @@ public class ProductServiceImp implements ProductService {
         }
         if (product.getDescription() != null) {
             existingProduct.setDescription(product.getDescription());
-        }
-        if (product.getImageURL() != null) {
-            existingProduct.setImageURL(product.getImageURL());
         }
 
         //        // Xử lý cập nhật danh mục (Categories)

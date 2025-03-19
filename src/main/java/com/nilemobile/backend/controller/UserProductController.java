@@ -31,7 +31,7 @@ public class UserProductController {
 
 
     @GetMapping("/products/id/{productId}")
-    public ResponseEntity<ProductResponseDTO> findProductByIdHanlder(@PathVariable Long productId) throws ProductException{
+    public ResponseEntity<ProductResponseDTO> findProductByIdHanlder(@PathVariable Long productId) throws ProductException {
         Product product = productService.findProductById(productId);
 
         ProductResponseDTO productDTO = new ProductResponseDTO(product);
@@ -90,5 +90,12 @@ public class UserProductController {
         List<String> thirdLevels = productService.getAllThirdLevels();
         return ResponseEntity.ok(thirdLevels);
     }
+
+    @GetMapping("/products/second-levels")
+    public ResponseEntity<List<String>> getAllSecondLevels() {
+        List<String> secondLevels = productService.getAllSecondLevels();
+        return ResponseEntity.ok(secondLevels);
+    }
+
 
 }

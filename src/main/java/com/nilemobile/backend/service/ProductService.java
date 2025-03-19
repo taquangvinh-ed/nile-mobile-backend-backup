@@ -35,5 +35,8 @@ public interface ProductService {
                                         Integer minBattery, Integer maxBattery, Float minScreenSize, Float maxScreenSize,
                                         Long minPrice, Long maxPrice, Integer minDiscount, String sort,
                                         Integer pageNumber, Integer pageSize);
+
     List<String> getAllThirdLevels();
+
+    List<String> getAllSecondLevels();
 }

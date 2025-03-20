@@ -8,10 +8,12 @@ import com.nilemobile.backend.repository.ReviewRepository;
 import com.nilemobile.backend.repository.UserRepository;
 import com.nilemobile.backend.repository.VariationRepository;
 import com.nilemobile.backend.request.CreateReviewRequest;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class ReviewServiceImp implements ReviewService {
     private ReviewRepository reviewRepository;
     private UserRepository userRepository;
@@ -38,6 +40,7 @@ public class ReviewServiceImp implements ReviewService {
         Review review = new Review();
         review.setVariation(variation);
         review.setUser(user);
+        review.setRating(request.getRating());
         review.setContent(request.getContent());
         review.setCreatedAt(LocalDateTime.now());
         return reviewRepository.save(review);

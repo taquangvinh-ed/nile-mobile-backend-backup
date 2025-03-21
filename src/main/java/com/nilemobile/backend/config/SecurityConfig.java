@@ -28,11 +28,14 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/products/third-levels").permitAll()
+                        .requestMatchers("/api/products/second-levels").permitAll()
                         .requestMatchers("/api/products/filter").permitAll()
                         .requestMatchers("/api/products/id/{productId}").permitAll()
                         .requestMatchers("/api/user/addresses").permitAll()
                         .requestMatchers("/api/user/addresses/**").permitAll()
                         .requestMatchers("/api/variations").permitAll()
+                        .requestMatchers("/api/reviews/variation/{variationId}").permitAll()
+
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
 

@@ -7,7 +7,6 @@ import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.repository.CategoryRepository;
 import com.nilemobile.backend.repository.ProductRepository;
 import com.nilemobile.backend.request.CreateProductRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImp implements ProductService {
@@ -435,5 +433,10 @@ public class ProductServiceImp implements ProductService {
     @Override
     public List<String> getAllThirdLevels() {
         return productRepository.findDistinctThirdLevels();
+    }
+
+    @Override
+    public List<String> getAllSecondLevels() {
+        return productRepository.findDistinctSecondLevels();
     }
 }

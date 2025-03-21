@@ -60,4 +60,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "WHERE c.level = 3")
     List<String> findDistinctThirdLevels();
 
+    @Query("SELECT DISTINCT c2.name " +
+            "FROM Product p " +
+            "JOIN p.categories c " +
+            "JOIN c.parentCategory c2 " +
+            "WHERE c2.level = 2")
+    List<String> findDistinctSecondLevels();
+
 }

@@ -53,7 +53,11 @@ public class AdminProductServiceImp implements AdminProductService{
 
     @Override
     public Product findProductById(Long id) throws ProductException {
-        return null;
+        if (id == null) {
+            throw new IllegalArgumentException("Product ID cannot be null");
+        }
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductException("Product with ID " + id + " not found"));
     }
 
     private ProductRepository productRepository;

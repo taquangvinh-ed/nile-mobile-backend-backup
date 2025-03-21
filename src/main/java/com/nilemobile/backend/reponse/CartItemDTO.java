@@ -24,7 +24,7 @@ public class CartItemDTO {
         this.variation = variation;
         this.quantity = quantity;
         this.subtotal = subtotal;
-        this.discountPrice= discountPrice;
+        this.discountPrice = discountPrice;
     }
 
     public VariationDTO getVariation() {
@@ -52,10 +52,11 @@ public class CartItemDTO {
     }
 
     public long getSubtotal() {
-        if (variation != null && quantity != null) {
-            return quantity * variation.getPrice();
-        }
-        return 0L;
+//        if (variation != null && quantity != null) {
+//            return quantity * variation.getPrice();
+//        }
+//        return 0L;
+        return subtotal;
     }
 
     public void setSubtotal(long subtotal) {

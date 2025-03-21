@@ -11,8 +11,7 @@ public class PaymentDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "order_id")
+    @OneToOne(mappedBy = "paymentDetails")
     private Order order;
 
     @Enumerated(EnumType.STRING)

@@ -4,7 +4,9 @@ import com.nilemobile.backend.exception.CartItemException;
 import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.model.CartItem;
 import com.nilemobile.backend.model.User;
+import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.repository.CartRepository;
+import com.nilemobile.backend.repository.VariationRepository;
 import com.nilemobile.backend.request.AddCartItemRequest;
 import com.nilemobile.backend.reponse.CartItemDTO;
 import com.nilemobile.backend.reponse.VariationDTO;
@@ -28,6 +30,9 @@ public class CartItemController {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private VariationRepository variationRepository;
+
     @PostMapping
     public ResponseEntity<CartItemDTO> addCartItemToCart(
             @RequestHeader("Authorization") String jwt,
@@ -41,6 +46,13 @@ public class CartItemController {
                     newCart.setUser(user);
                     return cartRepository.save(newCart);
                 });
+
+        if (req.getVariation() == null || req.getVariation().getId() == null) {
+            throw new CartItemException("Variation or Variation ID cannot be null");
+        }
+
+        Variation variation = variationRepository.findById(req.getVariation().getId())
+                .orElseThrow(() -> new CartItemException("Variation not found with ID: " + req.getVariation().getId()));
 
         CartItem cartItem = new CartItem();
         cartItem.setVariation(req.getVariation());

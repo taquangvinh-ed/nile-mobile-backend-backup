@@ -17,11 +17,6 @@ public class CartItem {
     @Column(name = "subtotal", nullable = false)
     private long subtotal = 0L;
 
-
-    public void setSubtotal(long subtotal) {
-        this.subtotal = subtotal;
-    }
-
     @ManyToOne
     @JoinColumn(name = "cart_id", referencedColumnName = "cart_id", nullable = false)
     @JsonBackReference
@@ -48,6 +43,11 @@ public class CartItem {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
+
+    public void setSubtotal(long subtotal) {
+        this.subtotal = subtotal;
+    }
+
 
     public long getSubtotal() {
         if (variation != null && quantity != null) {

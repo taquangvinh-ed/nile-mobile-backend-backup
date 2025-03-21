@@ -33,6 +33,7 @@ public class Order {
     private List<OrderDetail> orderDetails;
 
     @OneToOne
+    @JoinColumn(name = "paymentDetail_id", referencedColumnName = "id")
     private PaymentDetails paymentDetails;
 
     @OneToOne

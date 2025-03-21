@@ -39,16 +39,13 @@ public class CartItemServiceImp implements CartItemService {
             throw new CartItemException("CartItem or Cart cannot be null");
         }
 
-        // Tải cart cùng với cartItems và variation
         Cart cart = cartRepository.findByCartIdWithItems(cartItem.getCart().getCartId())
                 .orElseThrow(() -> new CartItemException("Cart not found with ID: " + cartItem.getCart().getCartId()));
 
-        // Kiểm tra xem cart đã thuộc về user khác hay chưa
         if (cart.getUser() != null && !cart.getUser().getUserId().equals(userId)) {
             throw new CartItemException("Cart with ID " + cart.getCartId() + " belongs to another user.");
         }
 
-        // Chỉ gán user nếu cart chưa có user
         if (cart.getUser() == null) {
             cart.setUser(user);
         }
@@ -79,7 +76,7 @@ public class CartItemServiceImp implements CartItemService {
         } else {
             cartItem.setSubtotal(0L);
         }
-        cartItem.setCart(cart); // Gán cart cho cartItem
+        cartItem.setCart(cart);
         CartItem saveCartItem = cartItemRepository.save(cartItem);
         cart.calculateSubtotal();
         cartRepository.save(cart);

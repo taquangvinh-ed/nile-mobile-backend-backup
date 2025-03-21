@@ -7,8 +7,10 @@ import com.nilemobile.backend.reponse.VariationDTO;
 public class AddCartItemRequest {
     private Variation variation;
     private Cart cart;
-    public AddCartItemRequest( Variation variationId, Cart cart) {
-        this.variation= variation;
+
+
+    public AddCartItemRequest(Variation variation, Cart cart) {
+        this.variation = variation;
         this.cart = cart;
 
     }

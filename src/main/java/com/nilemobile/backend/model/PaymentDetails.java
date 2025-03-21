@@ -1,26 +1,78 @@
 package com.nilemobile.backend.model;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 
-@Embeddable
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "PAYMENT_DETAILS")
 public class PaymentDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "order_id")
+    private Order order;
+
+    @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
     private PaymentStatus status;
+
     private String paymentId;
-    private String VNPAYPaymentUrl;
-    private String VNPAYTransactionRef;
-    private String VNPAYTransactionNo;
+
+    private String paymentUrl;
+
+    private String transactionRef;
+
+    private String transactionNo;
+
+    private Long amount;
+
+    private String responseCode;
+
+    private LocalDateTime transactionTime;
 
     public PaymentDetails() {
     }
 
-    public PaymentDetails(PaymentMethod paymentMethod, PaymentStatus status, String paymentId, String VNPAYPaymentUrl, String VNPAYTransactionRef, String VNPAYTransactionNo) {
+    public PaymentDetails(Long id,
+                          PaymentMethod paymentMethod,
+                          PaymentStatus status,
+                          String paymentId,
+                          String paymentUrl,
+                          String transactionRef,
+                          String transactionNo,
+                          Long amount,
+                          String responseCode,
+                          LocalDateTime transactionTime) {
+        this.id = id;
         this.paymentMethod = paymentMethod;
         this.status = status;
         this.paymentId = paymentId;
-        this.VNPAYPaymentUrl = VNPAYPaymentUrl;
-        this.VNPAYTransactionRef = VNPAYTransactionRef;
-        this.VNPAYTransactionNo = VNPAYTransactionNo;
+        this.paymentUrl = paymentUrl;
+        this.transactionRef = transactionRef;
+        this.transactionNo = transactionNo;
+        this.amount = amount;
+        this.responseCode = responseCode;
+        this.transactionTime = transactionTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public PaymentMethod getPaymentMethod() {
@@ -47,27 +99,51 @@ public class PaymentDetails {
         this.paymentId = paymentId;
     }
 
-    public String getVNPAYPaymentUrl() {
-        return VNPAYPaymentUrl;
+    public String getPaymentUrl() {
+        return paymentUrl;
     }
 
-    public void setVNPAYPaymentUrl(String VNPAYPaymentUrl) {
-        this.VNPAYPaymentUrl = VNPAYPaymentUrl;
+    public void setPaymentUrl(String paymentUrl) {
+        this.paymentUrl = paymentUrl;
     }
 
-    public String getVNPAYTransactionRef() {
-        return VNPAYTransactionRef;
+    public String getTransactionRef() {
+        return transactionRef;
     }
 
-    public void setVNPAYTransactionRef(String VNPAYTransactionRef) {
-        this.VNPAYTransactionRef = VNPAYTransactionRef;
+    public void setTransactionRef(String transactionRef) {
+        this.transactionRef = transactionRef;
     }
 
-    public String getVNPAYTransactionNo() {
-        return VNPAYTransactionNo;
+    public String getTransactionNo() {
+        return transactionNo;
     }
 
-    public void setVNPAYTransactionNo(String VNPAYTransactionNo) {
-        this.VNPAYTransactionNo = VNPAYTransactionNo;
+    public void setTransactionNo(String transactionNo) {
+        this.transactionNo = transactionNo;
+    }
+
+    public Long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public String getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(String responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public LocalDateTime getTransactionTime() {
+        return transactionTime;
+    }
+
+    public void setTransactionTime(LocalDateTime transactionTime) {
+        this.transactionTime = transactionTime;
     }
 }

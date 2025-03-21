@@ -32,11 +32,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "status", column = @Column(name = "payment_status", length = 20, nullable = false))
-    })
-    PaymentDetails paymentDetails = new PaymentDetails(PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.PENDING, null, null, null, null);
+    @OneToOne
+    private PaymentDetails paymentDetails;
 
     @OneToOne
     @JoinColumn(name = "addressId", referencedColumnName = "address_id", nullable = true)
@@ -54,7 +51,6 @@ public class Order {
 
     public Order() {
         this.status = OrderStatus.PLACED;
-        this.paymentDetails = new PaymentDetails(PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.PENDING, null, null, null, null);
     }
 
     public Order(Long id, LocalDateTime orderDate, Long totalPrice, Long totalDiscountPrice, User user, List<OrderDetail> orderDetails, PaymentDetails paymentDetails, Address shippingAddress, int totalItem, LocalDateTime createAt, OrderStatus status) {

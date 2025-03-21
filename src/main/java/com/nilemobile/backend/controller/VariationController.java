@@ -1,20 +1,21 @@
 package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.exception.ProductException;
+import com.nilemobile.backend.exception.VariationException;
 import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.reponse.VariationDTO;
+import com.nilemobile.backend.reponse.VariationDTO2;
 import com.nilemobile.backend.request.CreateVariationRequest;
 import com.nilemobile.backend.service.VariationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/variation")
 public class VariationController {
     private VariationService variationService;
 
@@ -22,7 +23,25 @@ public class VariationController {
         this.variationService = variationService;
     }
 
-    @PostMapping("/create-variation")
+    @GetMapping("/get-all")
+    public ResponseEntity<List<VariationDTO2>> getAllVariations(){
+        List<VariationDTO2> variations = variationService.getAllVariations();
+        return ResponseEntity.ok(variations);
+    }
+
+    @GetMapping("/id/{variationId}")
+    public ResponseEntity<VariationDTO> getVariationById(@PathVariable Long variationId) throws VariationException{
+        Variation variation = variationService.findVariationById(variationId);
+        VariationDTO variationDTO = new VariationDTO(variation);
+        return ResponseEntity.ok(variationDTO);
+    }
+
+    @GetMapping("/productId/{productId}")
+    public List<VariationDTO> getVariationsByProductId(@PathVariable Long productId) throws VariationException {
+        return variationService.getVariationsByProductId(productId);
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<VariationDTO> createVariation(@Valid @RequestBody CreateVariationRequest request) throws ProductException {
         Variation variation = variationService.createVariation(request);
         VariationDTO variationDTO = new VariationDTO(variation);

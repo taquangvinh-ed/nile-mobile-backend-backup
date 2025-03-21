@@ -1,8 +1,11 @@
 package com.nilemobile.backend.service;
 
 import com.nilemobile.backend.exception.ProductException;
+import com.nilemobile.backend.exception.VariationException;
 import com.nilemobile.backend.model.Product;
 import com.nilemobile.backend.model.Variation;
+import com.nilemobile.backend.reponse.VariationDTO;
+import com.nilemobile.backend.reponse.VariationDTO2;
 import com.nilemobile.backend.repository.ProductRepository;
 import com.nilemobile.backend.repository.VariationRepository;
 import com.nilemobile.backend.request.CreateVariationRequest;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @Service
 public class VariationServiceImp implements VariationService {
+
     private VariationRepository variationRepository;
     private ProductService productService;
     private ProductRepository productRepository;
@@ -30,6 +34,30 @@ public class VariationServiceImp implements VariationService {
         }
         return variationRepository.findById(variationId)
                 .orElseThrow(() -> new ProductException("Variation not found with id: " + variationId));
+    }
+
+    @Override
+    public List<VariationDTO2> getAllVariations(){
+        List<Variation> variations = variationRepository.findAll();
+        return variations.stream().
+                map(variation -> new VariationDTO2(
+                        variation.getId(),
+                        variation.getProduct().getName(),
+                        variation.getProduct().getCategories().getName(),
+                        variation.getProduct().getCategories().getParentCategory().getName(),
+                        variation.getColor(),
+                        variation.getRam(),
+                        variation.getRom(),
+                        variation.getPrice(),
+                        variation.getDiscountPrice(),
+                        variation.getDiscountPercent(),
+                        variation.getStockQuantity(),
+                        variation.getImageURL())).toList();
+    }
+
+    @Override
+    public List<VariationDTO> getVariationsByProductId(Long productId) throws VariationException {
+        return variationRepository.findByProductId(productId);
     }
 
     @Override

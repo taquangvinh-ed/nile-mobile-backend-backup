@@ -2,24 +2,28 @@ package com.nilemobile.backend.reponse;
 
 import com.nilemobile.backend.model.Variation;
 
-public class VariationDTO {
+public class VariationDTO2 {
     private Long variationId;
     private String name;
     private String color;
     private String ram;
     private String rom;
+    private String series;
+    private String brand;
     private Long price;
     private Long discountPrice;
     private int discountPercent;
     private Integer stockQuantity;
     private String imageURL;
 
-    public VariationDTO() {
+    public VariationDTO2() {
     }
 
-    public VariationDTO(Long variationId, String name, String color, String ram, String rom, Long price, Long discountPrice, int discountPercent, Integer stockQuantity, String imageURL) {
+    public VariationDTO2(Long variationId, String name, String series, String brand, String color, String ram, String rom, Long price, Long discountPrice, int discountPercent, Integer stockQuantity, String imageURL) {
         this.name = name;
         this.variationId = variationId;
+        this.series = series;
+        this.brand = brand;
         this.color = color;
         this.ram = ram;
         this.rom = rom;
@@ -30,7 +34,7 @@ public class VariationDTO {
         this.imageURL = imageURL;
     }
 
-    public VariationDTO(Variation variation) {
+    public VariationDTO2(Variation variation) {
         this.variationId = variation.getId();
         this.name=variation.getProduct().getName();
         this.color = variation.getColor();
@@ -121,5 +125,21 @@ public class VariationDTO {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

@@ -3,7 +3,7 @@ package com.nilemobile.backend.reponse;
 import com.nilemobile.backend.model.Product;
 
 public class AdminProductDTO {
-    private Long id;
+    private Long productId;
     private String name;
     private String categoryName;
     private Float screenSize;
@@ -23,7 +23,7 @@ public class AdminProductDTO {
     private String description;
 
     public AdminProductDTO(Product product) {
-        this.id = product.getId();
+        this.productId = product.getId();
         this.name = product.getName();
         this.categoryName = product.getCategories() != null ? product.getCategories().getName() : null;;
         this.screenSize = product.getScreenSize();
@@ -43,8 +43,8 @@ public class AdminProductDTO {
         this.description = product.getDescription();
     }
 
-    public AdminProductDTO(Long id, String name, String categoryName, Float screenSize, String displayTech, String refreshRate, String resolution, String frontCamera, String backCamera, String chipset, String cpu, String gpu, Integer batteryCapacity, String chargingPort, String os, String productSize, Float productWeight, String description) {
-        this.id = id;
+    public AdminProductDTO(Long productId, String name, String categoryName, Float screenSize, String displayTech, String refreshRate, String resolution, String frontCamera, String backCamera, String chipset, String cpu, String gpu, Integer batteryCapacity, String chargingPort, String os, String productSize, Float productWeight, String description) {
+        this.productId = productId;
         this.name = name;
         this.categoryName = categoryName;
         this.screenSize = screenSize;
@@ -64,12 +64,12 @@ public class AdminProductDTO {
         this.description = description;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getName() {

@@ -15,30 +15,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/product")
 
 public class AdminProductController {
 
     @Autowired
-    private AdminProductService adminProductService;
+    private AdminProductServiceImp adminProductServiceImp;
 
-    @GetMapping("product/id/{productId}")
+    @GetMapping("/id/{productId}")
     public ResponseEntity<AdminProductDTO> getProductById(@PathVariable Long productId) throws ProductException{
-        Product product = adminProductService.findProductById(productId);
+        Product product = adminProductServiceImp.findProductById(productId);
         AdminProductDTO adminProductDTO = new AdminProductDTO(product);
         return ResponseEntity.ok(adminProductDTO);
     }
 
-    @PostMapping("/create-product")
+    @PostMapping("/create")
     public ResponseEntity<AdminProductDTO> createProductHandler(@RequestBody AdminCreateProductRequest request) throws ProductException {
-        Product product = adminProductService.createProduct(request);
+        Product product = adminProductServiceImp.createProduct(request);
         AdminProductDTO adminProductDTO = new AdminProductDTO(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(adminProductDTO);
     }
 
-    @GetMapping("/get-all-products")
+    @GetMapping("/get-all")
     public ResponseEntity<List<AdminProductDTO>> getAllProducts() {
-        List<AdminProductDTO> products = adminProductService.getAllProducts();
+        List<AdminProductDTO> products = adminProductServiceImp.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
 }

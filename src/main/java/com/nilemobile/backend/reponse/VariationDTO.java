@@ -1,5 +1,6 @@
 package com.nilemobile.backend.reponse;
 
+import com.nilemobile.backend.model.Product;
 import com.nilemobile.backend.model.Variation;
 
 public class VariationDTO {
@@ -13,6 +14,7 @@ public class VariationDTO {
     private int discountPercent;
     private Integer stockQuantity;
     private String imageURL;
+    private ProductDTO product;
 
     public VariationDTO() {
     }
@@ -32,7 +34,9 @@ public class VariationDTO {
 
     public VariationDTO(Variation variation) {
         this.variationId = variation.getId();
-        this.name=variation.getProduct().getName();
+        Product product = variation.getProduct();
+        this.name = (product != null) ? product.getName() : "Unknown Product";
+        //this.name = variation.getProduct().getName();
         this.color = variation.getColor();
         this.ram = variation.getRam();
         this.rom = variation.getRom();
@@ -41,6 +45,7 @@ public class VariationDTO {
         this.discountPercent = variation.getDiscountPercent();
         this.stockQuantity = variation.getStockQuantity();
         this.imageURL = variation.getImageURL();
+        this.product = (product != null) ? new ProductDTO(product) : null;
     }
 
     public Long getVariationId() {
@@ -121,5 +126,13 @@ public class VariationDTO {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    public ProductDTO getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 }

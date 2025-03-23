@@ -16,6 +16,12 @@ public interface VariationService {
 
     public List<VariationDTO> getVariationsByProductId(Long productId) throws VariationException;
 
+    public void deleteVariationById(Long variationId);
+
+    public Variation createVariation(CreateVariationRequest request) throws ProductException;
+
+    public Variation updateVariation(Long variationId, VariationDTO variationDTO) throws VariationException;
+
     boolean isVariationInStock(Long variationId, int quantity) throws ProductException;
 
     Variation updateVariationStock(Long variationId, int quantity) throws ProductException;
@@ -24,5 +30,4 @@ public interface VariationService {
 
     Variation updateVariationPrice(Long variationId, Long newPrice) throws ProductException;
 
-    Variation createVariation(CreateVariationRequest request) throws ProductException;
 }

@@ -5,7 +5,9 @@ import com.nilemobile.backend.model.Product;
 public class AdminProductDTO {
     private Long productId;
     private String name;
-    private String categoryName;
+    private String brand;
+    private String series;
+    private Integer variationsQuantity;
     private Float screenSize;
     private String displayTech;
     private String refreshRate;
@@ -25,7 +27,9 @@ public class AdminProductDTO {
     public AdminProductDTO(Product product) {
         this.productId = product.getId();
         this.name = product.getName();
-        this.categoryName = product.getCategories() != null ? product.getCategories().getName() : null;;
+        this.series = product.getCategories() != null ? product.getCategories().getName() : null;
+        this.brand = product.getCategories().getParentCategory() != null ? product.getCategories().getParentCategory().getName() : null;
+        this.variationsQuantity = product.getVariations().size();
         this.screenSize = product.getScreenSize();
         this.displayTech = product.getDisplayTech();
         this.refreshRate = product.getRefreshRate();
@@ -43,10 +47,12 @@ public class AdminProductDTO {
         this.description = product.getDescription();
     }
 
-    public AdminProductDTO(Long productId, String name, String categoryName, Float screenSize, String displayTech, String refreshRate, String resolution, String frontCamera, String backCamera, String chipset, String cpu, String gpu, Integer batteryCapacity, String chargingPort, String os, String productSize, Float productWeight, String description) {
+    public AdminProductDTO(Long productId, String name, String brand, String series, Integer variationsQuantity, Float screenSize, String displayTech, String refreshRate, String resolution, String frontCamera, String backCamera, String chipset, String cpu, String gpu, Integer batteryCapacity, String chargingPort, String os, String productSize, Float productWeight, String description) {
         this.productId = productId;
         this.name = name;
-        this.categoryName = categoryName;
+        this.brand = brand;
+        this.series = series;
+        this.variationsQuantity = variationsQuantity;
         this.screenSize = screenSize;
         this.displayTech = displayTech;
         this.refreshRate = refreshRate;
@@ -80,12 +86,28 @@ public class AdminProductDTO {
         this.name = name;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
+    }
+
+    public Integer getVariationsQuantity() {
+        return variationsQuantity;
+    }
+
+    public void setVariationsQuantity(Integer variationsQuantity) {
+        this.variationsQuantity = variationsQuantity;
     }
 
     public Float getScreenSize() {

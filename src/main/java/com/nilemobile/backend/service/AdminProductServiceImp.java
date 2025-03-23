@@ -23,6 +23,8 @@ public class AdminProductServiceImp implements AdminProductService{
                         product.getId(),
                         product.getName(),
                         product.getCategories().getParentCategory().getName(),
+                        product.getCategories().getName(),
+                        product.getVariations().size(),
                         product.getScreenSize(),
                         product.getDisplayTech(),
                         product.getRefreshRate(),
@@ -130,6 +132,5 @@ public class AdminProductServiceImp implements AdminProductService{
         product.setCreateAt(LocalDateTime.now());
 
         return productRepository.save(product);
-
     }
 }

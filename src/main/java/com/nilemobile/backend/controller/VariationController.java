@@ -47,4 +47,15 @@ public class VariationController {
         VariationDTO variationDTO = new VariationDTO(variation);
         return ResponseEntity.status(HttpStatus.CREATED).body(variationDTO);
     }
+
+    @PutMapping("/update/{variationId}")
+    public ResponseEntity<VariationDTO> updateVariation(@PathVariable Long variationId, @Valid @RequestBody VariationDTO variationDTO) throws VariationException {
+        Variation updatedVariation = variationService.updateVariation(variationId, variationDTO);
+        return ResponseEntity.ok(new VariationDTO(updatedVariation));
+    }
+
+    @DeleteMapping("/delete/id/{variationId}")
+    public void deleteVariation(@PathVariable Long variationId) {
+        variationService.deleteVariationById(variationId);
+    }
 }

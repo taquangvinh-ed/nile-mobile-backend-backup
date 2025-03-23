@@ -61,6 +61,38 @@ public class VariationServiceImp implements VariationService {
     }
 
     @Override
+    public void deleteVariationById(Long variationId) {
+        if (variationRepository.existsById(variationId)) {
+            variationRepository.deleteById(variationId);
+        }
+    }
+
+    @Override
+    public Variation updateVariation(Long variationId, VariationDTO variationDTO) throws VariationException {
+        if (variationDTO.getColor() == null || variationDTO.getColor().isEmpty() ||
+                variationDTO.getRam() == null || variationDTO.getRam().isEmpty() ||
+                variationDTO.getRom() == null || variationDTO.getRom().isEmpty() ||
+                variationDTO.getPrice() == null ||
+                variationDTO.getDiscountPrice() == null ||
+                variationDTO.getStockQuantity() == null) {
+            throw new VariationException("Thông tin cập nhật không được để trống (trừ imageURL có thể rỗng).");
+        }
+
+        Variation variation = findVariationById(variationId);
+
+        variation.setColor(variationDTO.getColor());
+        variation.setRam(variationDTO.getRam());
+        variation.setRom(variationDTO.getRom());
+        variation.setPrice(variationDTO.getPrice());
+        variation.setDiscountPrice(variationDTO.getDiscountPrice());
+        variation.setDiscountPercent(variationDTO.getDiscountPercent());
+        variation.setStockQuantity(variationDTO.getStockQuantity());
+        variation.setImageURL(variationDTO.getImageURL());
+
+        return variationRepository.save(variation);
+    }
+
+    @Override
     public boolean isVariationInStock(Long variationId, int quantity) throws ProductException {
         if (variationId == null || quantity < 0) {
             throw new IllegalArgumentException("Variation ID or quantity is invalid");

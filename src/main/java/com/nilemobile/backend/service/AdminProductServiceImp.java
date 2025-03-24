@@ -1,8 +1,10 @@
 package com.nilemobile.backend.service;
 
 import com.nilemobile.backend.exception.ProductException;
+import com.nilemobile.backend.exception.VariationException;
 import com.nilemobile.backend.model.Categories;
 import com.nilemobile.backend.model.Product;
+import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.reponse.AdminProductDTO;
 import com.nilemobile.backend.repository.CategoryRepository;
 import com.nilemobile.backend.repository.ProductRepository;
@@ -22,6 +24,7 @@ public class AdminProductServiceImp implements AdminProductService{
                 .map(product -> new AdminProductDTO(
                         product.getId(),
                         product.getName(),
+                        product.getCategories().getParentCategory().getParentCategory().getName(),
                         product.getCategories().getParentCategory().getName(),
                         product.getCategories().getName(),
                         product.getVariations().size(),
@@ -45,12 +48,59 @@ public class AdminProductServiceImp implements AdminProductService{
 
     @Override
     public void deleteProduct(Long productId) throws ProductException {
-
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
+        productRepository.delete(product);
     }
 
     @Override
-    public Product updateProduct(Long productId, Product updatedProduct) throws ProductException {
-        return null;
+    public Product updateProduct(Long productId, AdminProductDTO adminProductDTO) throws ProductException {
+        if (adminProductDTO.getName() == null || adminProductDTO.getName().isEmpty() ||
+                adminProductDTO.getDescription() == null || adminProductDTO.getDescription().isEmpty() ||
+                adminProductDTO.getScreenSize() == null || adminProductDTO.getScreenSize() <= 0 ||
+                adminProductDTO.getDisplayTech() == null || adminProductDTO.getDisplayTech().isEmpty() ||
+                adminProductDTO.getResolution() == null || adminProductDTO.getResolution().isEmpty() ||
+                adminProductDTO.getRefreshRate() == null || adminProductDTO.getRefreshRate().isEmpty() ||
+                adminProductDTO.getFrontCamera() == null || adminProductDTO.getFrontCamera().isEmpty() ||
+                adminProductDTO.getBackCamera() == null || adminProductDTO.getBackCamera().isEmpty() ||
+                adminProductDTO.getChipset() == null || adminProductDTO.getChipset().isEmpty() ||
+                adminProductDTO.getCpu() == null || adminProductDTO.getCpu().isEmpty() ||
+                adminProductDTO.getGpu() == null || adminProductDTO.getGpu().isEmpty() ||
+                adminProductDTO.getBatteryCapacity() == null || adminProductDTO.getBatteryCapacity() <= 0 ||
+                adminProductDTO.getChargingPort() == null || adminProductDTO.getChargingPort().isEmpty() ||
+                adminProductDTO.getOs() == null || adminProductDTO.getOs().isEmpty() ||
+                adminProductDTO.getProductSize() == null || adminProductDTO.getProductSize().isEmpty() ||
+                adminProductDTO.getProductWeight() == null || adminProductDTO.getProductWeight() <= 0 ||
+                adminProductDTO.getCategory() == null || adminProductDTO.getCategory().isEmpty() ||
+                adminProductDTO.getBrand() == null || adminProductDTO.getBrand().isEmpty() ||
+                adminProductDTO.getSeries() == null || adminProductDTO.getSeries().isEmpty())
+        {
+            throw new ProductException("Thông tin cập nhật không được để trống.");
+        }
+
+        Product product = findProductById(productId);
+
+        product.setName(adminProductDTO.getName());
+        product.setDescription(adminProductDTO.getDescription());
+        product.setScreenSize(adminProductDTO.getScreenSize());
+        product.setDisplayTech(adminProductDTO.getDisplayTech());
+        product.setResolution(adminProductDTO.getResolution());
+        product.setRefreshRate(adminProductDTO.getRefreshRate());
+        product.setFrontCamera(adminProductDTO.getFrontCamera());
+        product.setBackCamera(adminProductDTO.getBackCamera());
+        product.setChipset(adminProductDTO.getChipset());
+        product.setCpu(adminProductDTO.getCpu());
+        product.setGpu(adminProductDTO.getGpu());
+        product.setBatteryCapacity(adminProductDTO.getBatteryCapacity());
+        product.setChargingPort(adminProductDTO.getChargingPort());
+        product.setOs(adminProductDTO.getOs());
+        product.setProductSize(adminProductDTO.getProductSize());
+        product.setProductWeight(adminProductDTO.getProductWeight());
+        product.getCategories().getParentCategory().getParentCategory().setName(adminProductDTO.getCategory());
+        product.getCategories().getParentCategory().setName(adminProductDTO.getBrand());
+        product.getCategories().setName(adminProductDTO.getSeries());
+
+        return productRepository.save(product);
     }
 
     @Override

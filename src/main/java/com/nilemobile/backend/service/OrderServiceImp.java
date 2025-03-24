@@ -40,14 +40,14 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public Order createOrder(User user, Address shippingAddress) {
-        Cart cart = cartRepository.findCartByUserId(user.getUserId());
+        Cart cart = cartService.findUserCart(user.getUserId());
         if (cart == null) {
             throw new Orderexception("Không tìm thấy giỏ hàng cho user " + user.getUserId());
         }
 
         Order order = new Order();
         order.setUser(user);
-        order.setShippingAddress(shippingAddress); // Có thể null
+        order.setShippingAddress(shippingAddress);
         order.setOrderDate(LocalDateTime.now());
         order.setCreateAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PLACED);

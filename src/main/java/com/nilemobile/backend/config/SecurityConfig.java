@@ -35,7 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/addresses/**").permitAll()
                         .requestMatchers("/api/variations").permitAll()
                         .requestMatchers("/api/reviews/variation/{variationId}").permitAll()
-
+                        .requestMatchers("/api/payment-vnpay/callback").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
 

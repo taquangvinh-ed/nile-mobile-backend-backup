@@ -81,7 +81,9 @@ public class Cart {
     }
 
     public int getTotalItems() {
-        return totalItems;
+        return cartItems.stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
     }
 
     public void setTotalItems(int totalItems) {
@@ -95,8 +97,13 @@ public class Cart {
         this.totalDiscountPrice = cartItems.stream()
                 .mapToLong(CartItem::getDiscountPrice)
                 .sum();
-        this.totalDiscountPercent = cartItems.stream()
-                .mapToInt(item -> item.getVariation() != null ? item.getVariation().getDiscountPercent() : 0)
-                .sum();
+        if (!cartItems.isEmpty()) {
+            this.totalDiscountPercent = (int) (cartItems.stream()
+                    .mapToInt(item -> item.getVariation() != null ? item.getVariation().getDiscountPercent() : 0)
+                    .average()
+                    .orElse(0));
+        } else {
+            this.totalDiscountPercent = 0;
+        }
     }
 }

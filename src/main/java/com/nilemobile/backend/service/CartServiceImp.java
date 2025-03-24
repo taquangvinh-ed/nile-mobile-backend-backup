@@ -61,25 +61,43 @@ public class CartServiceImp implements CartService {
     @Override
     public Cart findUserCart(Long userId) {
         Cart cart = cartRepository.findCartByUserId(userId);
-        cart.setTotalItems(cart.getCartItems().size());
+        if (cart == null) {
+            throw new CartException("Cart not found for user ID: " + userId);
+        }
+
         long subtotal = 0;
         long totalDiscountPrice = 0;
-        int totalItems = cart.getCartItems().size();
+        int totalItems = 0;
 
         for (CartItem item : cart.getCartItems()) {
+            // Tính giá gốc của CartItem
             long itemSubtotal = item.getVariation().getPrice() * item.getQuantity();
+            // Tính giá giảm của CartItem
             long itemDiscountPrice = (long) (item.getVariation().getPrice() * (item.getVariation().getDiscountPercent() / 100.0)) * item.getQuantity();
             item.setSubtotal(itemSubtotal);
             item.setDiscountPrice(itemDiscountPrice);
+
             subtotal += itemSubtotal;
             totalDiscountPrice += itemDiscountPrice;
+            totalItems += item.getQuantity(); // Tính tổng số lượng sản phẩm
         }
 
         cart.setSubtotal(subtotal);
         cart.setTotalDiscountPrice(totalDiscountPrice);
         cart.setTotalItems(totalItems);
-        cart.setTotalDiscountPercent(5);
-        return cart;
+
+        // Tính tổng phần trăm giảm giá trung bình (nếu cần)
+        if (!cart.getCartItems().isEmpty()) {
+            int totalDiscountPercent = (int) (cart.getCartItems().stream()
+                    .mapToInt(item -> item.getVariation() != null ? item.getVariation().getDiscountPercent() : 0)
+                    .average()
+                    .orElse(0));
+            cart.setTotalDiscountPercent(totalDiscountPercent);
+        } else {
+            cart.setTotalDiscountPercent(0);
+        }
+
+        return cartRepository.save(cart);
     }
 
 
@@ -113,10 +131,11 @@ public class CartServiceImp implements CartService {
     }
 
     @Override
-    public long getTotalDiscount(Long cartId){
+    public long getTotalDiscount(Long cartId) {
         Cart cart = getCartById(cartId);
         return cart.getTotalDiscountPrice();
     }
+
     @Transactional
     @Override
     public List<OrderDetail> convertCartToOrderDetails(Cart cart, Order order) {

@@ -23,7 +23,8 @@ public class VNPayController {
 
 
     @GetMapping
-    public ResponseEntity<?> pay(HttpServletRequest request) {
+    public ResponseEntity<?> pay(@RequestParam String orderId, HttpServletRequest request) {
+        request.setAttribute("orderId", orderId);
         return new ResponseEntity<>(vnPayService.createVnPayPayment(request), HttpStatus.OK);
     }
 
@@ -31,6 +32,8 @@ public class VNPayController {
     public ResponseEntity<?> payCallbackHanler(HttpServletRequest request,
                                                HttpServletResponse response,
                                                @RequestParam String vnp_ResponseCode) {
+
+
         if (vnp_ResponseCode == null) {
             PaymentDTO.VNPayResponse responseBody = PaymentDTO.VNPayResponse.builder()
                     .code("99")

@@ -10,7 +10,7 @@ import java.util.List;
 public interface AdminProductService {
     public Product createProduct(AdminCreateProductRequest request);
     public void deleteProduct(Long productId) throws ProductException;
-    public Product updateProduct(Long productId, Product updatedProduct) throws ProductException;
+    public Product updateProduct(Long productId, AdminProductDTO updatedProduct) throws ProductException;
     public Product findProductById(Long id) throws ProductException;
     public List<AdminProductDTO> getAllProducts();
 }

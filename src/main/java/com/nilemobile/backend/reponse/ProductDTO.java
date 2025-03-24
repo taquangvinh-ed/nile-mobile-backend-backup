@@ -11,6 +11,9 @@ public class ProductDTO {
         this.name = product.getName();
     }
 
+    public ProductDTO() {
+    }
+
     // Getters và setters
     public Long getId() {
         return id;

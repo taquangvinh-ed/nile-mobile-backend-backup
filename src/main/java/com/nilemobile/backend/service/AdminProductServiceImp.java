@@ -45,7 +45,9 @@ public class AdminProductServiceImp implements AdminProductService{
 
     @Override
     public void deleteProduct(Long productId) throws ProductException {
-
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
+        productRepository.delete(product);
     }
 
     @Override

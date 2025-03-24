@@ -7,10 +7,11 @@ import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.OrderDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
-    public Order createOrder(User user, Address shippingAddress);
+    public Order createOrder(User user, Address shippingAddress, List<Map<String, Object>> selectedItems);
 
     public Order findOrderById(Long orderId) throws Orderexception;
 

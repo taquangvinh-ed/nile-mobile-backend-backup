@@ -17,6 +17,11 @@ public class VariationDTO {
     private ProductDTO product;
 
     public VariationDTO() {
+        this.variationId = 0L;
+        this.price = 0L;
+        this.discountPercent = 0;
+        this.discountPrice = 0L;
+        this.stockQuantity = 0;
     }
 
     public VariationDTO(Long variationId, String name, String color, String ram, String rom, Long price, Long discountPrice, int discountPercent, Integer stockQuantity, String imageURL) {
@@ -135,4 +140,6 @@ public class VariationDTO {
     public void setProduct(ProductDTO product) {
         this.product = product;
     }
+
+
 }

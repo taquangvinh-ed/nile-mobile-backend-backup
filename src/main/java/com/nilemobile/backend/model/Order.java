@@ -52,6 +52,9 @@ public class Order {
 
     public Order() {
         this.status = OrderStatus.PLACED;
+        this.totalPrice = 0L;
+        this.totalDiscountPrice = 0L;
+        this.totalItem = 0;
     }
 
     public Order(Long id, LocalDateTime orderDate, Long totalPrice, Long totalDiscountPrice, User user, List<OrderDetail> orderDetails, PaymentDetails paymentDetails, Address shippingAddress, int totalItem, LocalDateTime createAt, OrderStatus status) {

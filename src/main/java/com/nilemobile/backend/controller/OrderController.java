@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -28,17 +29,53 @@ public class OrderController {
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<OrderDTO> createOrder(@RequestParam Long userId, @RequestBody(required = false) Address shippingAddress) {
+    public ResponseEntity<OrderDTO> createOrder(
+            @RequestParam Long userId,
+            @RequestBody Map<String, Object> request) { // Nhận request body dưới dạng Map để xử lý cả shippingAddress và selectedItems
         try {
             User user = userService.findUserById(userId);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
-            Order order = orderService.createOrder(user, shippingAddress);
+
+            // Lấy shippingAddress từ request
+            Address shippingAddress = null;
+            if (request != null && request.containsKey("shippingAddress") && request.get("shippingAddress") != null) {
+                Map<String, Object> addressMap = (Map<String, Object>) request.get("shippingAddress");
+                if (addressMap != null) { // Kiểm tra addressMap không null
+                    shippingAddress = new Address();
+                    shippingAddress.setAddressId(addressMap.get("addressId") != null
+                            ? Long.parseLong(addressMap.get("addressId").toString())
+                            : null);
+                    shippingAddress.setFirstName((String) addressMap.get("firstName"));
+                    shippingAddress.setLastName((String) addressMap.get("lastName"));
+                    shippingAddress.setAddressLine((String) addressMap.get("addressLine"));
+                    shippingAddress.setWard((String) addressMap.get("ward"));
+                    shippingAddress.setDistrict((String) addressMap.get("district"));
+                    shippingAddress.setProvince((String) addressMap.get("province"));
+                    shippingAddress.setPhoneNumber((String) addressMap.get("phoneNumber"));
+                }
+            }
+
+            // Lấy selectedItems từ request
+            List<Map<String, Object>> selectedItems = null;
+            if (request != null && request.containsKey("selectedItems")) {
+                selectedItems = (List<Map<String, Object>>) request.get("selectedItems");
+            } else {
+                throw new Orderexception("Danh sách sản phẩm được chọn không được để trống!");
+            }
+
+            // Gọi OrderService với cả shippingAddress và selectedItems
+            Order order = orderService.createOrder(user, shippingAddress, selectedItems);
             OrderDTO orderDTO = OrderMapper.toDTO(order);
             return ResponseEntity.ok(orderDTO);
         } catch (Orderexception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (Exception e) {
+            // Log lỗi để debug
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
         }
     }
 

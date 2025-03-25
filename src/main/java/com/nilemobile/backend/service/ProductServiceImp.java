@@ -82,11 +82,11 @@ public class ProductServiceImp implements ProductService {
         product.setChipset(request.getChipset());
         product.setCpu(request.getCpu());
         product.setGpu(request.getGpu());
-        product.setBatteryCapacity(parseInt(request.getBatteryCapacity(), "Dung lượng pin"));
+        product.setBatteryCapacity(request.getBatteryCapacity());
         product.setChargingPort(request.getChargingPort());
         product.setOs(request.getOs());
         product.setProductSize(request.getProductSize());
-        product.setProductWeight(parseFloat(request.getProductWeight(), "Trọng lượng sản phẩm"));
+        product.setProductWeight(request.getProductWeight());
         product.setCategories(thirdLevel != null ? thirdLevel : (secondLevel != null ? secondLevel : firstLevel));
         product.setCreateAt(LocalDateTime.now());
 

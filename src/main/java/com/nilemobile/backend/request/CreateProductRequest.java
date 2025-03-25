@@ -20,11 +20,11 @@ public class CreateProductRequest {
     private String chipset;
     private String cpu;
     private String gpu;
-    private String batteryCapacity;
+    private Integer batteryCapacity;
     private String chargingPort;
     private String os;
     private String productSize;
-    private String productWeight;
+    private Float productWeight;
     private String firstLevel;
     private String secondLevel;
     private String thirdLevel;
@@ -125,11 +125,11 @@ public class CreateProductRequest {
         this.gpu = gpu;
     }
 
-    public String getBatteryCapacity() {
+    public Integer getBatteryCapacity() {
         return batteryCapacity;
     }
 
-    public void setBatteryCapacity(String batteryCapacity) {
+    public void setBatteryCapacity(Integer batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
     }
 
@@ -157,11 +157,11 @@ public class CreateProductRequest {
         this.productSize = productSize;
     }
 
-    public String getProductWeight() {
+    public Float getProductWeight() {
         return productWeight;
     }
 
-    public void setProductWeight(String productWeight) {
+    public void setProductWeight(Float productWeight) {
         this.productWeight = productWeight;
     }
 

@@ -1,14 +1,13 @@
 package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.exception.ProductException;
-import com.nilemobile.backend.exception.VariationException;
 import com.nilemobile.backend.model.Product;
-import com.nilemobile.backend.model.Variation;
 import com.nilemobile.backend.reponse.AdminProductDTO;
-import com.nilemobile.backend.reponse.VariationDTO;
+import com.nilemobile.backend.reponse.ProductResponseDTO;
 import com.nilemobile.backend.request.AdminCreateProductRequest;
+import com.nilemobile.backend.request.CreateProductRequest;
 import com.nilemobile.backend.service.AdminProductService;
-import com.nilemobile.backend.service.AdminProductServiceImp;
+import com.nilemobile.backend.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,9 @@ public class AdminProductController {
     @Autowired
     private AdminProductService adminProductService;
 
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("/id/{productId}")
     public ResponseEntity<AdminProductDTO> getProductById(@PathVariable Long productId) throws ProductException{
         Product product = adminProductService.findProductById(productId);
@@ -37,6 +39,13 @@ public class AdminProductController {
         Product product = adminProductService.createProduct(request);
         AdminProductDTO adminProductDTO = new AdminProductDTO(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(adminProductDTO);
+    }
+
+    @PostMapping("/create-model")
+    public ResponseEntity<ProductResponseDTO> createProductHandler(@RequestBody CreateProductRequest request) throws ProductException {
+        Product product = productService.createProduct(request);
+        ProductResponseDTO productDTO = new ProductResponseDTO(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
     }
 
     @GetMapping("/get-all")

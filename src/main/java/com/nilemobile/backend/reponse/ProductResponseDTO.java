@@ -10,7 +10,6 @@ public class ProductResponseDTO {
     private Long id;
     private String name;
     private String description;
-    private String imageURL;
     private Float screenSize;
     private Integer batteryCapacity;
     private String os;
@@ -71,14 +70,6 @@ public class ProductResponseDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageURL() {
-        return imageURL;
-    }
-
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
     }
 
     public Float getScreenSize() {

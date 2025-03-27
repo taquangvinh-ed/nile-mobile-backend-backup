@@ -12,26 +12,25 @@ import java.util.TimeZone;
 
 @Configuration
 public class VNPayConfig {
-
-//    @Value("${PAY_URL}")
+    @Value("${PAY_URL}")
     private String vnp_PayUrl;
 
-//    @Value("${RETURN_URL}")
+    @Value("${RETURN_URL}")
     private String vnp_ReturnUrl;
 
-//    @Value("${TMN_CODE}")
+    @Value("${TMN_CODE}")
     private String vnp_TmnCode;
 
-//    @Value("${SECRET_KEY}")
+    @Value("${SECRET_KEY}")
     private String secretKey;
 
-//    @Value("${VERSION}")
+    @Value("${VERSION}")
     private String vnp_Version;
 
-//    @Value("${COMMAND}")
+    @Value("${COMMAND}")
     private String vnp_Command;
 
-//    @Value("${ORDER_TYPE}")
+    @Value("${ORDER_TYPE}")
     private String orderType;
 
     public String getVnp_PayUrl() {

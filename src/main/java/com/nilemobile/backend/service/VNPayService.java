@@ -84,5 +84,15 @@ public class VNPayService {
                 .paymentUrl(paymentUrl).build();
     }
 
+    public boolean verifyCallback(Map<String, String> params) {
+        String vnp_SecureHash = params.get("vnp_SecureHash");
+        params.remove("vnp_SecureHash");
 
+        String hashData = VNPayUtil.getPaymentUrl(params, false);
+        String computedHash = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), hashData);
+
+        return vnp_SecureHash != null && vnp_SecureHash.equals(computedHash);
+    }
+
+    
 }

@@ -36,7 +36,7 @@ public class Order {
     @JoinColumn(name = "paymentDetail_id", referencedColumnName = "id")
     private PaymentDetails paymentDetails;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "addressId", referencedColumnName = "address_id", nullable = true)
     private Address shippingAddress;
 

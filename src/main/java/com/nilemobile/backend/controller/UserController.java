@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping("/get-all-users")
     public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
         List<User> users = userRepository.findAll();
         List<UserProfileDTO> userProfiles = users.stream()
                 .map(user -> new UserProfileDTO(

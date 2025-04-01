@@ -24,7 +24,7 @@ public class User {
 
     private String email;
 
-    private Boolean role;
+    private String role="USER";
 
     private String phoneNumber;
 
@@ -88,11 +88,11 @@ public class User {
         this.email = email;
     }
 
-    public Boolean getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Boolean role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

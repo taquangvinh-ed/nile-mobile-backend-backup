@@ -3,6 +3,7 @@ package com.nilemobile.backend.controller;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.UserProfileDTO;
 import com.nilemobile.backend.repository.UserRepository;
+import com.nilemobile.backend.request.ChangePasswordRequest;
 import com.nilemobile.backend.service.UserException;
 import com.nilemobile.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,13 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileDTO> getMyProfile() throws UserException{
+    public ResponseEntity<UserProfileDTO> getMyProfile() throws UserException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String phoneNumber = authentication.getName();
 
         User user = userService.findByPhoneNumber(phoneNumber);
 
-        if(user == null){
+        if (user == null) {
             throw new UserException("Không tìm thấy thông tin của bạn");
         }
 
@@ -47,7 +48,7 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserProfileDTO> getUserProfile(@PathVariable Long userId) throws UserException {
         User user = userService.findUserById(userId);
-        UserProfileDTO  userProfileDTO = new UserProfileDTO(
+        UserProfileDTO userProfileDTO = new UserProfileDTO(
                 user.getUserId(),
                 user.getFirstName(),
                 user.getLastName(),
@@ -62,6 +63,7 @@ public class UserController {
         UserProfileDTO updatedUserProfile = userService.updateProfile(userId, user);
         return ResponseEntity.ok(updatedUserProfile);
     }
+
     @GetMapping("/get-all-users")
     public ResponseEntity<List<UserProfileDTO>> getAllUsers() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -76,5 +78,19 @@ public class UserController {
                         user.getCreatedDateAt().format(formatter)))
                 .toList();
         return ResponseEntity.ok(userProfiles);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(
+            @RequestBody ChangePasswordRequest request,
+            Authentication authentication) {
+        try {
+            // Lấy phoneNumber từ Authentication (được thiết lập bởi JwtValidator)
+            String phoneNumber = authentication.getName();
+            userService.changePassword(phoneNumber, request);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

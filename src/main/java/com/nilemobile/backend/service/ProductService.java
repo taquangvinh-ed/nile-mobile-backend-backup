@@ -39,4 +39,6 @@ public interface ProductService {
     List<String> getAllThirdLevels();
 
     List<String> getAllSecondLevels();
+
+    List<String> getThirdLevels(String secondLevel);
 }

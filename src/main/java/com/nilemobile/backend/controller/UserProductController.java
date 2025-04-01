@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PrivateKey;
@@ -95,6 +96,12 @@ public class UserProductController {
     public ResponseEntity<List<String>> getAllSecondLevels() {
         List<String> secondLevels = productService.getAllSecondLevels();
         return ResponseEntity.ok(secondLevels);
+    }
+
+    @GetMapping("/product/getThirdLevel")
+    public ResponseEntity<List<String>> getAllThirdLevelOfSecondLevel(@RequestParam String secondLevel) {
+        List<String> allThirdLevels = productService.getThirdLevels(secondLevel);
+        return ResponseEntity.ok(allThirdLevels);
     }
 
 

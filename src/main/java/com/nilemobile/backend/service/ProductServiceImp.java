@@ -439,4 +439,9 @@ public class ProductServiceImp implements ProductService {
     public List<String> getAllSecondLevels() {
         return productRepository.findDistinctSecondLevels();
     }
+
+    @Override
+    public List<String> getThirdLevels(String secondLevel) {
+        return productRepository.findThirdLevelsBySecondLevel(secondLevel);
+    }
 }

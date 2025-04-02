@@ -116,4 +116,12 @@ public class Address {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public String getFullAddress() {
+        return addressLine + ", " + ward + ", " + district + ", " + province;
+    }
+
+    public String getFullName() {
+        return lastName + " " + firstName;
+    }
 }

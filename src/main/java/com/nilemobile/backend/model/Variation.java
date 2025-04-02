@@ -156,4 +156,8 @@ public class Variation {
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
     }
+
+    public String getVariationName() {
+        return product.getName() + " " + color + " "+ ram + "/" + rom;
+    }
 }

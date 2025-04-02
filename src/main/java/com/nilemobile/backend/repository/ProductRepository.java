@@ -4,6 +4,7 @@ import com.nilemobile.backend.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN p.variations v " +
@@ -24,18 +25,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "AND (:ram IS NULL OR v.ram IN :ram) " +
             "AND (:rom IS NULL OR v.rom IN :rom) " +
             "AND (:os IS NULL OR p.os = :os) " +
-            "AND (:minBattery IS NULL OR p.batteryCapacity >= :minBattery) " +
-            "AND (:maxBattery IS NULL OR p.batteryCapacity <= :maxBattery) " +
-            "AND (:minScreenSize IS NULL OR p.screenSize >= :minScreenSize) " +
-            "AND (:maxScreenSize IS NULL OR p.screenSize <= :maxScreenSize) " +
-            "AND (:minPrice IS NULL OR v.price >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR v.price <= :maxPrice) " +
+            "AND (:minBattery IS NULL OR :maxBattery IS NULL OR p.batteryCapacity IS NULL OR (p.batteryCapacity >= :minBattery AND p.batteryCapacity <= :maxBattery)) " +
+            "AND (:minScreenSize IS NULL OR :maxScreenSize IS NULL OR p.screenSize IS NULL OR (p.screenSize >= :minScreenSize AND p.screenSize <= :maxScreenSize)) " +
+            "AND (:minPrice IS NULL OR :maxPrice IS NULL OR " +
+            "  (SELECT MIN(v2.discountPrice) FROM Variation v2 WHERE v2.product = p AND v2.stockQuantity > 0) >= :minPrice AND " +
+            "  (SELECT MIN(v2.discountPrice) FROM Variation v2 WHERE v2.product = p AND v2.stockQuantity > 0) <= :maxPrice) " +
             "AND (:minDiscount IS NULL OR v.discountPercent >= :minDiscount) " +
             "AND (v IS NOT NULL AND v.stockQuantity > 0) " +
             "ORDER BY CASE WHEN :sort = 'price_asc' THEN " +
-            "  (SELECT MIN(v2.price) FROM Variation v2 WHERE v2.product = p) END ASC, " +
+            "  (SELECT MIN(v2.discountPrice) FROM Variation v2 WHERE v2.product = p) END ASC, " +
             "CASE WHEN :sort = 'price_desc' THEN " +
-            "  (SELECT MIN(v2.price) FROM Variation v2 WHERE v2.product = p) END DESC, " +
+            "  (SELECT MIN(v2.discountPrice) FROM Variation v2 WHERE v2.product = p) END DESC, " +
             "CASE WHEN :sort = 'newest' THEN p.createAt END DESC")
     Page<Product> filterProducts(
             @Param("firstLevel") String firstLevel,

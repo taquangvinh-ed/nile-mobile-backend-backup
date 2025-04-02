@@ -41,4 +41,10 @@ public interface ProductService {
     List<String> getAllSecondLevels();
 
     List<String> getThirdLevels(String secondLevel);
+
+    Page<Product> filterByPriceBatteryAndScreenSize(
+            Integer minBattery, Integer maxBattery,
+            Float minScreenSize, Float maxScreenSize,
+            Long minPrice, Long maxPrice,
+            String sort, Integer pageNumber, Integer pageSize);
 }

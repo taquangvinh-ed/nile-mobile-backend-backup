@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/payment-vnpay/callback").permitAll()
                         .requestMatchers("/api/payment-vnpay/verify").permitAll()
                         .requestMatchers("/api/product/getThirdLevel").permitAll()
+                        .requestMatchers("/api/products/filter-simple").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll()
 

@@ -104,5 +104,40 @@ public class UserProductController {
         return ResponseEntity.ok(allThirdLevels);
     }
 
+    @GetMapping("/products/filter-simple")
+    public ResponseEntity<Page<ProductResponseDTO>> filterByPriceBatteryAndScreenSize(
+            @RequestParam(required = false) Integer minBattery,
+            @RequestParam(required = false) Integer maxBattery,
+            @RequestParam(required = false) Float minScreenSize,
+            @RequestParam(required = false) Float maxScreenSize,
+            @RequestParam(required = false) Long minPrice,
+            @RequestParam(required = false) Long maxPrice,
+            @RequestParam(required = false) String sort,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize) throws ProductException {
+
+        System.out.println("Filtering products with simple parameters:");
+        System.out.println("minBattery: " + minBattery);
+        System.out.println("maxBattery: " + maxBattery);
+        System.out.println("minScreenSize: " + minScreenSize);
+        System.out.println("maxScreenSize: " + maxScreenSize);
+        System.out.println("minPrice: " + minPrice);
+        System.out.println("maxPrice: " + maxPrice);
+        System.out.println("sort: " + sort);
+        System.out.println("pageNumber: " + pageNumber);
+        System.out.println("pageSize: " + pageSize);
+
+        Page<Product> filteredProducts = productService.filterByPriceBatteryAndScreenSize(
+                minBattery, maxBattery,
+                minScreenSize, maxScreenSize,
+                minPrice, maxPrice,
+                sort, pageNumber, pageSize
+        );
+
+        Page<ProductResponseDTO> productResponseDTOs = filteredProducts.map(ProductResponseDTO::new);
+
+        return ResponseEntity.ok(productResponseDTOs);
+    }
+
 
 }

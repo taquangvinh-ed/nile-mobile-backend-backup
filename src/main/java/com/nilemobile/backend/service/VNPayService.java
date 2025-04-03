@@ -62,7 +62,7 @@ public class VNPayService {
                     .build();
         }
 
-        long amount = order.getTotalPrice() - order.getTotalDiscountPrice();
+        long amount = order.getTotalDiscountPrice();
         long vnpAmount = amount * 100;
         String bankCode = request.getParameter("bankCode");
 
@@ -94,5 +94,5 @@ public class VNPayService {
         return vnp_SecureHash != null && vnp_SecureHash.equals(computedHash);
     }
 
-    
+
 }

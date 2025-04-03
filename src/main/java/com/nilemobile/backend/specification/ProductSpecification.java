@@ -12,6 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductSpecification {
+
+    public static Specification<Product> hasKeyword(String keyword) {
+        return (root, query, criteriaBuilder) -> {
+            if (keyword == null || keyword.trim().isEmpty()) {
+                return null;
+            }
+            return criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("name")),
+                    "%" + keyword.toLowerCase() + "%"
+            );
+        };
+    }
+
+
     public static Specification<Product> hasBatteryCapacity(Integer minBattery, Integer maxBattery) {
         return (root, query, criteriaBuilder) -> {
             if (minBattery == null && maxBattery == null) {
@@ -78,11 +92,13 @@ public class ProductSpecification {
     }
 
     // Kết hợp các điều kiện lọc
-    public static Specification<Product> filterByPriceBatteryAndScreenSize(
+    public static Specification<Product> filterByKeywordPriceBatteryAndScreenSize(
+            String keyword,
             Integer minBattery, Integer maxBattery,
             Float minScreenSize, Float maxScreenSize,
             Long minPrice, Long maxPrice) {
-        return Specification.where(hasBatteryCapacity(minBattery, maxBattery))
+        return Specification.where(hasKeyword(keyword))
+                .and(hasBatteryCapacity(minBattery, maxBattery))
                 .and(hasScreenSize(minScreenSize, maxScreenSize))
                 .and(hasPriceRange(minPrice, maxPrice))
                 .and(inStock());

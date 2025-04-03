@@ -300,6 +300,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<Product> filterByPriceBatteryAndScreenSize(
+            String keyword,
             Integer minBattery, Integer maxBattery,
             Float minScreenSize, Float maxScreenSize,
             Long minPrice, Long maxPrice,
@@ -329,8 +330,8 @@ public class ProductServiceImp implements ProductService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sortObj);
 
         // Sử dụng Specification để lọc
-        Specification<Product> spec = ProductSpecification.filterByPriceBatteryAndScreenSize(
-                minBattery, maxBattery,
+        Specification<Product> spec = ProductSpecification.filterByKeywordPriceBatteryAndScreenSize(
+                keyword, minBattery, maxBattery,
                 minScreenSize, maxScreenSize,
                 minPrice, maxPrice
         );

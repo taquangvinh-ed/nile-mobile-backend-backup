@@ -106,6 +106,7 @@ public class UserProductController {
 
     @GetMapping("/products/filter-simple")
     public ResponseEntity<Page<ProductResponseDTO>> filterByPriceBatteryAndScreenSize(
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer minBattery,
             @RequestParam(required = false) Integer maxBattery,
             @RequestParam(required = false) Float minScreenSize,
@@ -128,6 +129,7 @@ public class UserProductController {
         System.out.println("pageSize: " + pageSize);
 
         Page<Product> filteredProducts = productService.filterByPriceBatteryAndScreenSize(
+                keyword,
                 minBattery, maxBattery,
                 minScreenSize, maxScreenSize,
                 minPrice, maxPrice,

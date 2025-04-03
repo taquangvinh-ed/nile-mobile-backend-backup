@@ -16,6 +16,8 @@ public class OrderDetail {
     @Column(name = "subtotal", nullable = false)
     private Long subtotal;
 
+    @Column(name = "totalDiscountPrice", nullable = true)
+    private Long totalDiscountPrice;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
@@ -48,6 +50,14 @@ public class OrderDetail {
 
     public void setSubtotal(Long subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Long getTotalDiscountPrice() {
+        return totalDiscountPrice;
+    }
+
+    public void setTotalDiscountPrice(Long totalDiscountPrice) {
+        this.totalDiscountPrice = totalDiscountPrice;
     }
 
     public Order getOrder() {

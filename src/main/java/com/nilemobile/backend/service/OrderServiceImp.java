@@ -98,6 +98,13 @@ public class OrderServiceImp implements OrderService {
                     ? Integer.parseInt(discountPercentObj.toString())
                     : 0);
 
+            Object discountPrice = variationMap.get("discountPrice");
+            if (discountPrice == null) {
+                throw new Orderexception("Giá sau khi giảm của variation không được để trống");
+            }
+            variation.setDiscountPrice(Long.parseLong(discountPrice.toString()));
+
+
             // Gán imageURL (không bắt buộc, có thể null)
             variation.setImageURL((String) variationMap.get("imageURL"));
 
@@ -129,6 +136,7 @@ public class OrderServiceImp implements OrderService {
             totalDiscount += Long.parseLong(discountPriceObj.toString());
 
             totalItem += orderDetail.getQuantity();
+            orderDetail.setTotalDiscountPrice(variation.getDiscountPrice() * orderDetail.getQuantity());
         }
 
         order.setTotalPrice(totalPrice);
@@ -138,7 +146,7 @@ public class OrderServiceImp implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
-        // Xóa các CartItem được chọn khỏi giỏ hàng
+//         //Xóa các CartItem được chọn khỏi giỏ hàng
 //        for (Map<String, Object> item : selectedItems) {
 //            Object cartItemIdObj = item.get("id");
 //            if (cartItemIdObj == null) {

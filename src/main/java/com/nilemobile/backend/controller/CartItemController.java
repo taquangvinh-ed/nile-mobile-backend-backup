@@ -10,7 +10,9 @@ import com.nilemobile.backend.repository.VariationRepository;
 import com.nilemobile.backend.request.AddCartItemRequest;
 import com.nilemobile.backend.reponse.CartItemDTO;
 import com.nilemobile.backend.reponse.VariationDTO;
+import com.nilemobile.backend.request.BuyNowRequest;
 import com.nilemobile.backend.service.CartItemService;
+import com.nilemobile.backend.service.CartService;
 import com.nilemobile.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,9 @@ public class CartItemController {
 
     @Autowired
     private VariationRepository variationRepository;
+
+    @Autowired
+    private CartService cartService;
 
     @PostMapping
     public ResponseEntity<CartItemDTO> addCartItemToCart(
@@ -88,6 +93,74 @@ public class CartItemController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
+    @PostMapping("/buy-now")
+    public ResponseEntity<CartItemDTO> buyNow(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody BuyNowRequest request) throws CartItemException {
+        // Lấy user từ JWT
+        User user = userService.findUserProfileByJwt(jwt);
+        Long userId = user.getUserId();
+
+        // Tìm hoặc tạo giỏ hàng cho user
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    return cartRepository.save(newCart);
+                });
+
+        // Kiểm tra variationId
+        if (request.getVariationId() == null) {
+            throw new CartItemException("Variation ID cannot be null");
+        }
+
+        // Tìm variation
+        Variation variation = variationRepository.findById(request.getVariationId())
+                .orElseThrow(() -> new CartItemException("Variation not found with ID: " + request.getVariationId()));
+
+        // Kiểm tra xem variation đã có trong giỏ hàng chưa
+        CartItem existingCartItem = cart.getCartItems().stream()
+                .filter(item -> item.getVariation().getId().equals(request.getVariationId()))
+                .findFirst()
+                .orElse(null);
+
+        CartItem cartItem;
+        if (existingCartItem != null) {
+            // Nếu đã có, cập nhật isSelected
+            existingCartItem.setSelected(true);
+            cartItem = cartService.updateCartItem(existingCartItem);
+        } else {
+            // Nếu chưa có, tạo mới CartItem với isSelected: true
+            cartItem = new CartItem();
+            cartItem.setCart(cart);
+            cartItem.setVariation(variation);
+            cartItem.setQuantity(1);
+            cartItem.setSubtotal(variation.getPrice() * cartItem.getQuantity());
+            cartItem.setDiscountPrice(variation.getDiscountPrice() * cartItem.getQuantity());
+            cartItem.setSelected(true); // Đặt isSelected: true
+            cartItem = cartItemService.createCartItem(cartItem, userId);
+        }
+
+        CartItemDTO cartItemDTO = convertToDTO(cartItem);
+        return new ResponseEntity<>(cartItemDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/{cartItemId}/select")
+    public ResponseEntity<CartItemDTO> updateCartItemSelection(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long cartItemId,
+            @RequestParam Boolean selected) throws CartItemException {
+        User user = userService.findUserProfileByJwt(jwt);
+        Long userId = user.getUserId();
+
+        CartItem updatedCartItem = cartItemService.updateCartItemSelection(userId, cartItemId, selected);
+
+        CartItemDTO cartItemDTO = convertToDTO(updatedCartItem);
+        return new ResponseEntity<>(cartItemDTO, HttpStatus.OK);
+    }
+
+
     private CartItemDTO convertToDTO(CartItem cartItem) {
         VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
         long subtotal = cartItem.getVariation().getPrice() * cartItem.getQuantity();
@@ -99,7 +172,8 @@ public class CartItemController {
                 variationDTO,
                 cartItem.getQuantity(),
                 subtotal,
-                discountPrice
+                discountPrice,
+                cartItem.getSelected()
         );
         return cartItemDTO;
     }

@@ -15,7 +15,19 @@ public class CartItemDTO {
 
     private Long discountPrice;
 
+    private Boolean isSelected;
+
     public CartItemDTO() {
+    }
+
+    public CartItemDTO(String name, Long id, VariationDTO variation, Integer quantity, long subtotal, Long discountPrice, Boolean isSelected) {
+        this.name = variation.getName();
+        this.id = id;
+        this.variation = variation;
+        this.quantity = quantity;
+        this.subtotal = subtotal;
+        this.discountPrice = discountPrice;
+        this.isSelected = isSelected;
     }
 
     public CartItemDTO(String name, Long id, VariationDTO variation, Integer quantity, long subtotal, Long discountPrice) {
@@ -69,5 +81,21 @@ public class CartItemDTO {
 
     public void setDiscountPrice(Long discountPrice) {
         this.discountPrice = discountPrice;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
     }
 }

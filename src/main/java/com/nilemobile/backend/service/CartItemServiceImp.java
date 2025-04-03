@@ -130,4 +130,23 @@ public class CartItemServiceImp implements CartItemService {
         cartRepository.save(cart);
         return cartItem;
     }
+
+    @Override
+    public CartItem updateCartItemSelection(Long userId, Long cartItemId, Boolean selected) throws CartItemException {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new CartItemException("CartItem not found with id: " + cartItemId));
+
+        if (!cartItem.getCart().getUser().getUserId().equals(userId)) {
+            throw new CartItemException("CartItem does not belong to user with id: " + userId);
+        }
+
+        cartItem.setSelected(selected);
+        CartItem updatedCartItem = cartItemRepository.save(cartItem);
+
+        Cart cart = updatedCartItem.getCart();
+        cart.calculateSubtotal();
+        cartRepository.save(cart);
+
+        return updatedCartItem;
+    }
 }

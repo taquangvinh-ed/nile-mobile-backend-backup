@@ -28,6 +28,8 @@ public class CartItem {
 
     private Long discountPrice;
 
+    private Boolean isSelected;
+
     public Long getId() {
         return id;
     }
@@ -78,5 +80,13 @@ public class CartItem {
 
     public void setDiscountPrice(Long discountPrice) {
         this.discountPrice = discountPrice;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
     }
 }

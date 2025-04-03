@@ -16,5 +16,6 @@ public interface CartItemService {
 
     public CartItem removeCartItem(Long userId, Long cartItemId) throws CartItemException;
 
+    CartItem updateCartItemSelection(Long userId, Long cartItemId, Boolean selected) throws CartItemException;
 
 }

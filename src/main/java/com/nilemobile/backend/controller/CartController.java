@@ -1,6 +1,7 @@
 package com.nilemobile.backend.controller;
 
 import com.nilemobile.backend.model.Cart;
+import com.nilemobile.backend.model.CartItem;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.CartDTO;
 import com.nilemobile.backend.reponse.CartItemDTO;
@@ -35,7 +36,7 @@ public class CartController {
 
         List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(cartItem -> {
             VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
-            return new CartItemDTO(variationDTO.getName(), cartItem.getId(),variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice());
+            return new CartItemDTO(variationDTO.getName(), cartItem.getId(), variationDTO, cartItem.getQuantity(), cartItem.getSubtotal(), cartItem.getDiscountPrice(), cartItem.getSelected());
         }).collect(Collectors.toList());
 
         CartDTO cartDTO = new CartDTO(cart.getSubtotal(),
@@ -45,4 +46,6 @@ public class CartController {
                 cartItemDTOs);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
+
+   
 }

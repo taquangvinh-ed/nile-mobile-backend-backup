@@ -3,6 +3,7 @@ package com.nilemobile.backend.service;
 import com.nilemobile.backend.exception.CartException;
 import com.nilemobile.backend.exception.ProductException;
 import com.nilemobile.backend.model.*;
+import com.nilemobile.backend.repository.CartItemRepository;
 import com.nilemobile.backend.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartServiceImp implements CartService {
@@ -23,12 +25,19 @@ public class CartServiceImp implements CartService {
 
     private VariationService variationService;
 
+    private CartItemRepository cartItemRepository;
+
     @Autowired
-    public CartServiceImp(CartRepository cartRepository, CartItemService cartItemService, ProductService productService, VariationService variationService) {
+    public CartServiceImp(CartRepository cartRepository,
+                          CartItemService cartItemService,
+                          ProductService productService,
+                          VariationService variationService,
+                          CartItemRepository cartItemRepository) {
         this.cartRepository = cartRepository;
         this.cartItemService = cartItemService;
         this.productService = productService;
         this.variationService = variationService;
+        this.cartItemRepository = cartItemRepository;
     }
 
     @Transactional
@@ -150,4 +159,15 @@ public class CartServiceImp implements CartService {
         }
         return orderDetails;
     }
+
+    @Override
+    public CartItem updateCartItem(CartItem cartItem) {
+        Cart cart = cartItem.getCart();
+        cartItem = cartItemRepository.save(cartItem);
+        cart.calculateSubtotal();
+        cartRepository.save(cart);
+        return cartItem;
+    }
+
+
 }

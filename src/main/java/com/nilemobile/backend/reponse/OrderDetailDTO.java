@@ -6,19 +6,21 @@ public class OrderDetailDTO {
     private String variationName;
     private int quantity;
     private long subtotal;
+    private Long totalDiscountPrice;
     private String imageURL;
 
     // Constructor, Getters, Setters
     public OrderDetailDTO() {
     }
 
-    public OrderDetailDTO(Long id, Long variationId, String variationName, String imageURL, Integer quantity, Long subtotal) {
+    public OrderDetailDTO(Long id, Long variationId, String variationName, String imageURL, Integer quantity, Long subtotal, Long totalDiscountPrice) {
         this.id = id;
         this.variationId = variationId;
         this.variationName = variationName;
         this.imageURL = imageURL;
         this.quantity = quantity;
         this.subtotal = subtotal;
+        this.totalDiscountPrice = totalDiscountPrice;
     }
 
     public Long getId() {
@@ -59,6 +61,14 @@ public class OrderDetailDTO {
 
     public void setSubtotal(long subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Long getTotalDiscountPrice() {
+        return totalDiscountPrice;
+    }
+
+    public void setTotalDiscountPrice(Long totalDiscountPrice) {
+        this.totalDiscountPrice = totalDiscountPrice;
     }
 
     public String getImageURL() {

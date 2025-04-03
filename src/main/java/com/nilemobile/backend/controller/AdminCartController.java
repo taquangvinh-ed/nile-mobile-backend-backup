@@ -3,7 +3,6 @@ package com.nilemobile.backend.controller;
 import com.nilemobile.backend.model.Cart;
 import com.nilemobile.backend.reponse.AdminCartDTO;
 import com.nilemobile.backend.reponse.AdminCartItemDTO;
-import com.nilemobile.backend.reponse.CartDTO;
 import com.nilemobile.backend.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -53,7 +53,8 @@ public class UserController {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getPhoneNumber()
+                user.getPhoneNumber(),
+                user.getCreatedDateAt().format(DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy"))
         );
         return ResponseEntity.ok(userProfileDTO);
     }

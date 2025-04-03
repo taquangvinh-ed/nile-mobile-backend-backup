@@ -16,7 +16,7 @@ public class OrderDetail {
     @Column(name = "subtotal", nullable = false)
     private Long subtotal;
 
-    @Column(name = "totalDiscountPrice", nullable = true)
+    @Column(name = "totalDiscountPrice", nullable = false)
     private Long totalDiscountPrice;
 
     @ManyToOne

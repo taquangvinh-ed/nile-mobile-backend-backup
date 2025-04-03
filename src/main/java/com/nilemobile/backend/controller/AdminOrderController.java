@@ -43,7 +43,8 @@ public class AdminOrderController {
                         orderDetail.getVariation().getVariationName(),
                         orderDetail.getVariation().getImageURL(),
                         orderDetail.getQuantity(),
-                        orderDetail.getSubtotal()
+                        orderDetail.getSubtotal(),
+                        orderDetail.getTotalDiscountPrice()
                 )).collect(toList())
         )).collect(toList());
         return ResponseEntity.ok(orderProfile);
@@ -68,7 +69,8 @@ public class AdminOrderController {
                         orderDetail.getVariation().getVariationName(),
                         orderDetail.getVariation().getImageURL(),
                         orderDetail.getQuantity(),
-                        orderDetail.getSubtotal()
+                        orderDetail.getSubtotal(),
+                        orderDetail.getTotalDiscountPrice()
                 )).collect(toList())
         );
         return ResponseEntity.ok(orderDTO);
@@ -93,7 +95,8 @@ public class AdminOrderController {
                         orderDetail.getVariation().getVariationName(),
                         orderDetail.getVariation().getImageURL(),
                         orderDetail.getQuantity(),
-                        orderDetail.getSubtotal()
+                        orderDetail.getSubtotal(),
+                        orderDetail.getTotalDiscountPrice()
                 )).collect(toList())
         )).collect(toList());
         return ResponseEntity.ok(orderProfile);

@@ -73,7 +73,7 @@ public class CartServiceImp implements CartService {
             // Tính giá gốc của CartItem
             long itemSubtotal = item.getVariation().getPrice() * item.getQuantity();
             // Tính giá giảm của CartItem
-            long itemDiscountPrice = (long) (item.getVariation().getPrice() * (item.getVariation().getDiscountPercent() / 100.0)) * item.getQuantity();
+            long itemDiscountPrice = itemSubtotal - ((item.getVariation().getDiscountPrice()) * item.getQuantity());
             item.setSubtotal(itemSubtotal);
             item.setDiscountPrice(itemDiscountPrice);
 

@@ -1,5 +1,7 @@
 package com.nilemobile.backend.reponse;
 
+import com.nilemobile.backend.model.User;
+
 public class AddressDTO {
     private Long addressId;
     private String firstName;
@@ -10,6 +12,18 @@ public class AddressDTO {
     private String district;
     private String province;
     private Boolean isDefault;
+
+    public AddressDTO(Long addressId, String firstName, String lastName, String phoneNumber, String addressLine, String ward, String district, String province, Boolean isDefault) {
+        this.addressId = addressId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.addressLine = addressLine;
+        this.ward = ward;
+        this.district = district;
+        this.province = province;
+        this.isDefault = isDefault;
+    }
 
     public AddressDTO() {}
 
@@ -44,4 +58,5 @@ public class AddressDTO {
     public Boolean getIsDefault() {
         return isDefault;
     }
+
 }

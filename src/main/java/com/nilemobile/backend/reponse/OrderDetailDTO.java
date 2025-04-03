@@ -3,12 +3,22 @@ package com.nilemobile.backend.reponse;
 public class OrderDetailDTO {
     private Long id;
     private Long variationId;
+    private String variationName;
     private int quantity;
     private long subtotal;
     private String imageURL;
 
     // Constructor, Getters, Setters
     public OrderDetailDTO() {
+    }
+
+    public OrderDetailDTO(Long id, Long variationId, String variationName, String imageURL, Integer quantity, Long subtotal) {
+        this.id = id;
+        this.variationId = variationId;
+        this.variationName = variationName;
+        this.imageURL = imageURL;
+        this.quantity = quantity;
+        this.subtotal = subtotal;
     }
 
     public Long getId() {
@@ -25,6 +35,14 @@ public class OrderDetailDTO {
 
     public void setVariationId(Long variationId) {
         this.variationId = variationId;
+    }
+
+    public String getVariationName() {
+        return variationName;
+    }
+
+    public void setVariationName(String variationName) {
+        this.variationName = variationName;
     }
 
     public int getQuantity() {

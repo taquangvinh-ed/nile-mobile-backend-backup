@@ -48,6 +48,10 @@ public class User {
 
     private LocalDateTime createdDateAt;
 
+    public String getFullName() {
+        return getLastName() + getFirstName();
+    }
+
     public Long getUserId() {
         return userId;
     }

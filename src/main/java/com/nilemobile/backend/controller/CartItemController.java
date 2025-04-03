@@ -91,7 +91,7 @@ public class CartItemController {
     private CartItemDTO convertToDTO(CartItem cartItem) {
         VariationDTO variationDTO = new VariationDTO(cartItem.getVariation());
         long subtotal = cartItem.getVariation().getPrice() * cartItem.getQuantity();
-        long discountPrice = (long) (cartItem.getVariation().getPrice() * (cartItem.getVariation().getDiscountPercent() / 100.0)) * cartItem.getQuantity();
+        long discountPrice = (long) (cartItem.getVariation().getDiscountPrice() * cartItem.getQuantity());
 
         CartItemDTO cartItemDTO = new CartItemDTO(
                 variationDTO.getName(),

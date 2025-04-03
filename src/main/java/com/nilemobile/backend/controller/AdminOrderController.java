@@ -73,4 +73,29 @@ public class AdminOrderController {
         );
         return ResponseEntity.ok(orderDTO);
     }
+
+    @GetMapping("/user/id/{userId}")
+    public ResponseEntity<List<AdminOrderDTO>> getAllOrdersByUserId(@PathVariable Long userId) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+        List<Order> orders = orderRepository.findByUserId(userId);
+        List<AdminOrderDTO> orderProfile = orders.stream().map(order -> new AdminOrderDTO(
+                order.getId(),
+                order.getShippingAddress().getFullName(),
+                order.getUser().getPhoneNumber(),
+                order.getTotalDiscountPrice(),
+                order.getStatus().toString(),
+                order.getOrderDate().format(formatter),
+                order.getShippingAddress().getFullAddress(),
+                order.getPaymentDetails().getPaymentMethod().toString(),
+                order.getOrderDetails().stream().map(orderDetail -> new OrderDetailDTO(
+                        orderDetail.getId(),
+                        orderDetail.getVariation().getId(),
+                        orderDetail.getVariation().getVariationName(),
+                        orderDetail.getVariation().getImageURL(),
+                        orderDetail.getQuantity(),
+                        orderDetail.getSubtotal()
+                )).collect(toList())
+        )).collect(toList());
+        return ResponseEntity.ok(orderProfile);
+    }
 }

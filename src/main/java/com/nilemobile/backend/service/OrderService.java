@@ -37,4 +37,6 @@ public interface OrderService {
     public List<OrderDTO> filterOrderByStatus(String status);
 
     Order updateShippingAddress(Long orderId, Address shippingAddress) throws Orderexception;
+
+    List<Order> getOrdersByUserAndStatus(Long userId, String status);
 }

@@ -7,6 +7,8 @@ import com.nilemobile.backend.model.*;
 import com.nilemobile.backend.repository.CartRepository;
 import com.nilemobile.backend.reponse.OrderDTO;
 import com.nilemobile.backend.repository.OrderRepository;
+import com.nilemobile.backend.specification.OrderSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -295,5 +297,12 @@ public class OrderServiceImp implements OrderService {
 
         order.setShippingAddress(shippingAddress);
         return orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> getOrdersByUserAndStatus(Long userId, String status) {
+        Specification<Order> spec = Specification.where(OrderSpecification.hasUserId(userId))
+                .and(OrderSpecification.hasStatus(status));
+        return orderRepository.findAll(spec);
     }
 }

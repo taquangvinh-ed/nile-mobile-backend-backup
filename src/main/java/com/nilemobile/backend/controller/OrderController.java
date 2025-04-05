@@ -7,6 +7,7 @@ import com.nilemobile.backend.model.Order;
 import com.nilemobile.backend.model.User;
 import com.nilemobile.backend.reponse.OrderDTO;
 import com.nilemobile.backend.service.OrderService;
+import com.nilemobile.backend.service.UserException;
 import com.nilemobile.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -90,19 +91,19 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}/orders/history")
-    public ResponseEntity<List<OrderDTO>> getOrderHistory(@PathVariable Long userId) {
-        List<Order> orders = orderService.orderHistory(userId);
-        List<OrderDTO> orderDTOs = OrderMapper.toDTOs(orders);
-        return ResponseEntity.ok(orderDTOs);
-    }
+//    @GetMapping("/user/{userId}/orders/history")
+//    public ResponseEntity<List<OrderDTO>> getOrderHistory(@PathVariable Long userId) {
+//        List<Order> orders = orderService.orderHistory(userId);
+//        List<OrderDTO> orderDTOs = OrderMapper.toDTOs(orders);
+//        return ResponseEntity.ok(orderDTOs);
+//    }
 
-    @GetMapping("/user/{userId}/orders/all")
-    public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable Long userId) {
-        List<Order> orders = orderService.getAllOrders(userId);
-        List<OrderDTO> orderDTOs = OrderMapper.toDTOs(orders);
-        return ResponseEntity.ok(orderDTOs);
-    }
+//    @GetMapping("/user/{userId}/orders/all")
+//    public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable Long userId) {
+//        List<Order> orders = orderService.getAllOrders(userId);
+//        List<OrderDTO> orderDTOs = OrderMapper.toDTOs(orders);
+//        return ResponseEntity.ok(orderDTOs);
+//    }
 
     @PutMapping("/{orderId}/confirm")
     public ResponseEntity<OrderDTO> confirmOrder(@PathVariable Long orderId) {
@@ -199,5 +200,22 @@ public class OrderController {
         } catch (Orderexception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getUserOrders(
+            @RequestHeader("Authorization") String jwt,
+            @RequestParam(value = "status", required = false) String status) throws UserException {
+        User user = userService.findUserProfileByJwt(jwt);
+        List<Order> orders;
+
+        if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("all")) {
+            orders = orderService.getOrdersByUserAndStatus(user.getUserId(), status);
+        } else {
+            orders = orderService.getAllOrders(user.getUserId());
+        }
+
+        List<OrderDTO> orderDTOs = OrderMapper.toDTOs(orders);
+        return new ResponseEntity<>(orderDTOs, HttpStatus.OK);
     }
 }

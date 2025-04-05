@@ -53,6 +53,7 @@ public class OrderMapper {
             OrderDetailDTO dto = new OrderDetailDTO();
             dto.setId(detail.getId());
             dto.setVariationId(detail.getVariation().getId());
+            dto.setVariationName(detail.getVariation().getVariationName());
             dto.setQuantity(detail.getQuantity());
             dto.setSubtotal(detail.getSubtotal());
             dto.setImageURL(detail.getVariation().getImageURL());

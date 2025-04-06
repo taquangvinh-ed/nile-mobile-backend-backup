@@ -11,6 +11,8 @@ public interface UserService {
 
     public UserProfileDTO updateProfile(Long userId, User user);
 
+    public User updateProfileUser(Long userId, UserProfileDTO userProfileDTO) throws UserException;
+
     public User findByPhoneNumber(String phoneNumber);
 
     void changePassword(String phoneNumber, ChangePasswordRequest request) throws Exception;

@@ -1,6 +1,9 @@
 package com.nilemobile.backend.reponse;
 
+import com.nilemobile.backend.model.User;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class UserProfileDTO {
     private Long userId;
@@ -11,6 +14,15 @@ public class UserProfileDTO {
     private String createdDateAt;
 
     public UserProfileDTO() {}
+
+    public UserProfileDTO(User user){
+        this.userId = user.getUserId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.email = user.getEmail();
+        this.phoneNumber = user.getPhoneNumber();
+        this.createdDateAt = user.getCreatedDateAt().format(DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy"));
+    }
 
     public UserProfileDTO(Long userId, String firstName, String lastName, String email, String phoneNumber, String createdDateAt) {
         this.userId = userId;

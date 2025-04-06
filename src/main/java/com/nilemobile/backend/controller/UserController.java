@@ -6,6 +6,7 @@ import com.nilemobile.backend.repository.UserRepository;
 import com.nilemobile.backend.request.ChangePasswordRequest;
 import com.nilemobile.backend.service.UserException;
 import com.nilemobile.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -79,6 +80,14 @@ public class UserController {
                         user.getCreatedDateAt().format(formatter)))
                 .toList();
         return ResponseEntity.ok(userProfiles);
+    }
+
+    @PutMapping("/update-profile/{userId}")
+    public ResponseEntity<UserProfileDTO> updateUserProfile(
+            @PathVariable Long userId,
+            @Valid @RequestBody UserProfileDTO userProfileDTO) throws UserException {
+        User updatedUser = userService.updateProfileUser(userId, userProfileDTO);
+        return ResponseEntity.ok(new UserProfileDTO(updatedUser));
     }
 
     @PostMapping("/change-password")

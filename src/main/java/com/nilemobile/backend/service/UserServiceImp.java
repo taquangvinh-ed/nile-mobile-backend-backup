@@ -75,6 +75,23 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public User updateProfileUser(Long userId, UserProfileDTO userProfileDTO) throws UserException {
+        if(userProfileDTO.getFirstName()==null || userProfileDTO.getFirstName().isEmpty() ||
+                userProfileDTO.getLastName()==null || userProfileDTO.getLastName().isEmpty() ||
+                userProfileDTO.getEmail()==null || userProfileDTO.getEmail().isEmpty() ||
+                userProfileDTO.getPhoneNumber()==null || userProfileDTO.getPhoneNumber().isEmpty()){
+            throw new UserException("User profile information is incomplete");
+        }
+        User user = findUserById(userId);
+        user.setFirstName(userProfileDTO.getFirstName());
+        user.setLastName(userProfileDTO.getLastName());
+        user.setEmail(userProfileDTO.getEmail());
+        user.setPhoneNumber(userProfileDTO.getPhoneNumber());
+        user.setCreatedDateAt(user.getCreatedDateAt());
+        return userRepository.save(user);
+    }
+
+    @Override
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
     }

@@ -1,9 +1,13 @@
 package com.nilemobile.backend.reponse;
 
+import com.nilemobile.backend.model.Variation;
+
 public class OrderDetailDTO {
     private Long id;
     private Long variationId;
     private String variationName;
+    private String brand;
+    private String series;
     private int quantity;
     private long subtotal;
     private Long totalDiscountPrice;
@@ -13,10 +17,12 @@ public class OrderDetailDTO {
     public OrderDetailDTO() {
     }
 
-    public OrderDetailDTO(Long id, Long variationId, String variationName, String imageURL, Integer quantity, Long subtotal, Long totalDiscountPrice) {
+    public OrderDetailDTO(Long id, Long variationId, String variationName, String brand, String series, String imageURL, Integer quantity, Long subtotal, Long totalDiscountPrice) {
         this.id = id;
         this.variationId = variationId;
         this.variationName = variationName;
+        this.brand = brand;
+        this.series = series;
         this.imageURL = imageURL;
         this.quantity = quantity;
         this.subtotal = subtotal;
@@ -45,6 +51,22 @@ public class OrderDetailDTO {
 
     public void setVariationName(String variationName) {
         this.variationName = variationName;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getSeries() {
+        return series;
+    }
+
+    public void setSeries(String series) {
+        this.series = series;
     }
 
     public int getQuantity() {

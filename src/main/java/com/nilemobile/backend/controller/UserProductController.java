@@ -119,16 +119,16 @@ public class UserProductController {
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize) throws ProductException {
 
-        System.out.println("Filtering products with simple parameters:");
-        System.out.println("minBattery: " + minBattery);
-        System.out.println("maxBattery: " + maxBattery);
-        System.out.println("minScreenSize: " + minScreenSize);
-        System.out.println("maxScreenSize: " + maxScreenSize);
-        System.out.println("minPrice: " + minPrice);
-        System.out.println("maxPrice: " + maxPrice);
-        System.out.println("sort: " + sort);
-        System.out.println("pageNumber: " + pageNumber);
-        System.out.println("pageSize: " + pageSize);
+//        System.out.println("Filtering products with simple parameters:");
+//        System.out.println("minBattery: " + minBattery);
+//        System.out.println("maxBattery: " + maxBattery);
+//        System.out.println("minScreenSize: " + minScreenSize);
+//        System.out.println("maxScreenSize: " + maxScreenSize);
+//        System.out.println("minPrice: " + minPrice);
+//        System.out.println("maxPrice: " + maxPrice);
+//        System.out.println("sort: " + sort);
+//        System.out.println("pageNumber: " + pageNumber);
+//        System.out.println("pageSize: " + pageSize);
 
         Page<Product> filteredProducts = productService.filterByPriceBatteryAndScreenSize(
                 keyword,

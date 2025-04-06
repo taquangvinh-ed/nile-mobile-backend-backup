@@ -3,10 +3,7 @@ package com.nilemobile.backend.specification;
 import com.nilemobile.backend.model.Categories;
 import com.nilemobile.backend.model.Product;
 import com.nilemobile.backend.model.Variation;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
@@ -19,10 +16,34 @@ public class ProductSpecification {
             if (keyword == null || keyword.trim().isEmpty()) {
                 return null;
             }
-            return criteriaBuilder.like(
-                    criteriaBuilder.lower(root.get("name")),
-                    "%" + keyword.toLowerCase() + "%"
-            );
+
+            // Tách từ khóa thành các từ riêng lẻ
+            String[] keywords = keyword.trim().toLowerCase().split("\\s+");
+
+            // Tạo danh sách các điều kiện (predicates)
+            List<Predicate> predicates = new ArrayList<>();
+
+            // Tìm kiếm trên nhiều trường: name, categories, description
+            for (String kw : keywords) {
+                String pattern = "%" + kw + "%";
+                List<Predicate> subPredicates = new ArrayList<>();
+
+                // Tìm trong tên sản phẩm
+                subPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), pattern));
+
+                // Tìm trong danh mục (categories)
+                Join<Product, Categories> categoryJoin = root.join("categories", JoinType.LEFT);
+                subPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(categoryJoin.get("name")), pattern));
+
+                // Tìm trong mô tả (nếu có trường description)
+                // subPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), pattern));
+
+                // Kết hợp các điều kiện với OR (tìm thấy trong bất kỳ trường nào)
+                predicates.add(criteriaBuilder.or(subPredicates.toArray(new Predicate[0])));
+            }
+
+            // Kết hợp tất cả các từ khóa với AND (cần thỏa mãn tất cả từ khóa)
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 

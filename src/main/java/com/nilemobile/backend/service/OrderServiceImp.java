@@ -7,6 +7,7 @@ import com.nilemobile.backend.model.*;
 import com.nilemobile.backend.repository.CartRepository;
 import com.nilemobile.backend.reponse.OrderDTO;
 import com.nilemobile.backend.repository.OrderRepository;
+import com.nilemobile.backend.repository.VariationRepository;
 import com.nilemobile.backend.specification.OrderSpecification;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -32,13 +33,142 @@ public class OrderServiceImp implements OrderService {
 
     private OrderRepository orderRepository;
 
-    public OrderServiceImp(CartRepository cartRepository, CartService cartService, ProductService productService, OrderRepository orderRepository) {
+    private VariationRepository variationRepository;
+
+    public OrderServiceImp(CartRepository cartRepository,
+                           CartService cartService,
+                           ProductService productService,
+                           OrderRepository orderRepository,
+                           VariationRepository variationRepository) {
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.productService = productService;
         this.orderRepository = orderRepository;
+        this.variationRepository = variationRepository;
     }
 
+//    @Override
+//    public Order createOrder(User user, Address shippingAddress, List<Map<String, Object>> selectedItems) {
+//        if (selectedItems == null || selectedItems.isEmpty()) {
+//            throw new Orderexception("Không có sản phẩm nào được chọn để tạo đơn hàng!");
+//        }
+//
+//        Order order = new Order();
+//        order.setUser(user);
+//        order.setShippingAddress(shippingAddress);
+//        order.setOrderDate(LocalDateTime.now());
+//        order.setCreateAt(LocalDateTime.now());
+//        order.setStatus(OrderStatus.PLACED);
+//
+//        // Tính toán tổng giá, tổng giảm giá, và tổng số lượng dựa trên selectedItems
+//        long totalPrice = 0;
+//        long totalDiscount = 0;
+//        int totalItem = 0;
+//        List<OrderDetail> orderDetails = new ArrayList<>();
+//
+//        for (Map<String, Object> item : selectedItems) {
+//            // Kiểm tra item không null
+//            if (item == null) {
+//                throw new Orderexception("Dữ liệu sản phẩm không hợp lệ: item là null");
+//            }
+//
+//            OrderDetail orderDetail = new OrderDetail();
+//            orderDetail.setOrder(order);
+//
+//            // Lấy variationMap và kiểm tra
+//            Map<String, Object> variationMap = (Map<String, Object>) item.get("variation");
+//            if (variationMap == null) {
+//                throw new Orderexception("Dữ liệu variation không hợp lệ: variation là null");
+//            }
+//
+//            Variation variation = new Variation();
+//
+//            // Kiểm tra và gán id (bắt buộc)
+//            Object idObj = variationMap.get("variationId"); // Sửa: dùng "variationId" thay vì "id"
+//            if (idObj == null) {
+//                throw new Orderexception("ID của variation không được để trống");
+//            }
+//            variation.setId(Long.parseLong(idObj.toString()));
+//
+//            // Gán name (không bắt buộc, đã có giá trị mặc định từ VariationDTO)
+//
+//            // Gán color (không bắt buộc, có thể null)
+//            variation.setColor((String) variationMap.get("color"));
+//
+//            // Kiểm tra và gán price (bắt buộc)
+//            Object priceObj = variationMap.get("price");
+//            if (priceObj == null) {
+//                throw new Orderexception("Giá của variation không được để trống");
+//            }
+//            variation.setPrice(Long.parseLong(priceObj.toString()));
+//
+//            // Kiểm tra và gán discountPercent (bắt buộc, mặc định 0 nếu null)
+//            Object discountPercentObj = variationMap.get("discountPercent");
+//            variation.setDiscountPercent(discountPercentObj != null
+//                    ? Integer.parseInt(discountPercentObj.toString())
+//                    : 0);
+//
+//            Object discountPrice = variationMap.get("discountPrice");
+//            if (discountPrice == null) {
+//                throw new Orderexception("Giá sau khi giảm của variation không được để trống");
+//            }
+//            variation.setDiscountPrice(Long.parseLong(discountPrice.toString()));
+//
+//
+//            // Gán imageURL (không bắt buộc, có thể null)
+//            variation.setImageURL((String) variationMap.get("imageURL"));
+//
+//            orderDetail.setVariation(variation);
+//
+//            // Kiểm tra và gán quantity (bắt buộc)
+//            Object quantityObj = item.get("quantity");
+//            if (quantityObj == null) {
+//                throw new Orderexception("Số lượng sản phẩm không được để trống");
+//            }
+//            orderDetail.setQuantity(Integer.parseInt(quantityObj.toString()));
+//
+//            // Kiểm tra và gán subtotal (bắt buộc)
+//            Object subtotalObj = item.get("subtotal");
+//            if (subtotalObj == null) {
+//                throw new Orderexception("Tổng phụ của sản phẩm không được để trống");
+//            }
+//            orderDetail.setSubtotal(Long.parseLong(subtotalObj.toString()));
+//
+//            orderDetails.add(orderDetail);
+//
+//            totalPrice += orderDetail.getSubtotal();
+//
+//            // Kiểm tra và gán discountPrice (bắt buộc, mặc định 0 nếu null)
+//            Object discountPriceObj = item.get("discountPrice");
+//            if (discountPriceObj == null) {
+//                throw new Orderexception("Giá giảm của sản phẩm không được để trống");
+//            }
+//            totalDiscount += Long.parseLong(discountPriceObj.toString());
+//
+//            totalItem += orderDetail.getQuantity();
+//            orderDetail.setTotalDiscountPrice(variation.getDiscountPrice() * orderDetail.getQuantity());
+//        }
+//
+//        order.setTotalPrice(totalPrice);
+//        order.setTotalDiscountPrice(totalDiscount);
+//        order.setTotalItem(totalItem);
+//        order.setOrderDetails(orderDetails);
+//
+//        Order savedOrder = orderRepository.save(order);
+//
+
+    /// /         //Xóa các CartItem được chọn khỏi giỏ hàng
+    /// /        for (Map<String, Object> item : selectedItems) {
+    /// /            Object cartItemIdObj = item.get("id");
+    /// /            if (cartItemIdObj == null) {
+    /// /                throw new Orderexception("ID của CartItem không được để trống");
+    /// /            }
+    /// /            Long cartItemId = Long.parseLong(cartItemIdObj.toString());
+    /// /            cartService.removeCartItem(user.getUserId(), cartItemId);
+    /// /        }
+//
+//        return savedOrder;
+//    }
     @Override
     public Order createOrder(User user, Address shippingAddress, List<Map<String, Object>> selectedItems) {
         if (selectedItems == null || selectedItems.isEmpty()) {
@@ -52,14 +182,12 @@ public class OrderServiceImp implements OrderService {
         order.setCreateAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PLACED);
 
-        // Tính toán tổng giá, tổng giảm giá, và tổng số lượng dựa trên selectedItems
         long totalPrice = 0;
         long totalDiscount = 0;
         int totalItem = 0;
         List<OrderDetail> orderDetails = new ArrayList<>();
 
         for (Map<String, Object> item : selectedItems) {
-            // Kiểm tra item không null
             if (item == null) {
                 throw new Orderexception("Dữ liệu sản phẩm không hợp lệ: item là null");
             }
@@ -67,78 +195,39 @@ public class OrderServiceImp implements OrderService {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setOrder(order);
 
-            // Lấy variationMap và kiểm tra
             Map<String, Object> variationMap = (Map<String, Object>) item.get("variation");
             if (variationMap == null) {
                 throw new Orderexception("Dữ liệu variation không hợp lệ: variation là null");
             }
 
-            Variation variation = new Variation();
-
-            // Kiểm tra và gán id (bắt buộc)
-            Object idObj = variationMap.get("variationId"); // Sửa: dùng "variationId" thay vì "id"
+            Object idObj = variationMap.get("variationId");
             if (idObj == null) {
                 throw new Orderexception("ID của variation không được để trống");
             }
-            variation.setId(Long.parseLong(idObj.toString()));
+            Long variationId = Long.parseLong(idObj.toString());
 
-            // Gán name (không bắt buộc, đã có giá trị mặc định từ VariationDTO)
-
-            // Gán color (không bắt buộc, có thể null)
-            variation.setColor((String) variationMap.get("color"));
-
-            // Kiểm tra và gán price (bắt buộc)
-            Object priceObj = variationMap.get("price");
-            if (priceObj == null) {
-                throw new Orderexception("Giá của variation không được để trống");
-            }
-            variation.setPrice(Long.parseLong(priceObj.toString()));
-
-            // Kiểm tra và gán discountPercent (bắt buộc, mặc định 0 nếu null)
-            Object discountPercentObj = variationMap.get("discountPercent");
-            variation.setDiscountPercent(discountPercentObj != null
-                    ? Integer.parseInt(discountPercentObj.toString())
-                    : 0);
-
-            Object discountPrice = variationMap.get("discountPrice");
-            if (discountPrice == null) {
-                throw new Orderexception("Giá sau khi giảm của variation không được để trống");
-            }
-            variation.setDiscountPrice(Long.parseLong(discountPrice.toString()));
-
-
-            // Gán imageURL (không bắt buộc, có thể null)
-            variation.setImageURL((String) variationMap.get("imageURL"));
+            // Lấy Variation từ cơ sở dữ liệu
+            Variation variation = variationRepository.findById(variationId)
+                    .orElseThrow(() -> new Orderexception("Không tìm thấy Variation với ID: " + variationId));
 
             orderDetail.setVariation(variation);
 
-            // Kiểm tra và gán quantity (bắt buộc)
             Object quantityObj = item.get("quantity");
             if (quantityObj == null) {
                 throw new Orderexception("Số lượng sản phẩm không được để trống");
             }
-            orderDetail.setQuantity(Integer.parseInt(quantityObj.toString()));
+            int quantity = Integer.parseInt(quantityObj.toString());
+            orderDetail.setQuantity(quantity);
 
-            // Kiểm tra và gán subtotal (bắt buộc)
-            Object subtotalObj = item.get("subtotal");
-            if (subtotalObj == null) {
-                throw new Orderexception("Tổng phụ của sản phẩm không được để trống");
-            }
-            orderDetail.setSubtotal(Long.parseLong(subtotalObj.toString()));
+            // Tính subtotal dựa trên giá của Variation từ DB
+            orderDetail.setSubtotal(variation.getPrice() * quantity);
 
             orderDetails.add(orderDetail);
 
             totalPrice += orderDetail.getSubtotal();
-
-            // Kiểm tra và gán discountPrice (bắt buộc, mặc định 0 nếu null)
-            Object discountPriceObj = item.get("discountPrice");
-            if (discountPriceObj == null) {
-                throw new Orderexception("Giá giảm của sản phẩm không được để trống");
-            }
-            totalDiscount += Long.parseLong(discountPriceObj.toString());
-
-            totalItem += orderDetail.getQuantity();
-            orderDetail.setTotalDiscountPrice(variation.getDiscountPrice() * orderDetail.getQuantity());
+            totalDiscount += variation.getDiscountPrice() != null ? variation.getDiscountPrice() * quantity : 0;
+            totalItem += quantity;
+            orderDetail.setTotalDiscountPrice(variation.getDiscountPrice() != null ? variation.getDiscountPrice() * quantity : 0);
         }
 
         order.setTotalPrice(totalPrice);
@@ -146,19 +235,7 @@ public class OrderServiceImp implements OrderService {
         order.setTotalItem(totalItem);
         order.setOrderDetails(orderDetails);
 
-        Order savedOrder = orderRepository.save(order);
-
-//         //Xóa các CartItem được chọn khỏi giỏ hàng
-//        for (Map<String, Object> item : selectedItems) {
-//            Object cartItemIdObj = item.get("id");
-//            if (cartItemIdObj == null) {
-//                throw new Orderexception("ID của CartItem không được để trống");
-//            }
-//            Long cartItemId = Long.parseLong(cartItemIdObj.toString());
-//            cartService.removeCartItem(user.getUserId(), cartItemId);
-//        }
-
-        return savedOrder;
+        return orderRepository.save(order);
     }
 
     @Override

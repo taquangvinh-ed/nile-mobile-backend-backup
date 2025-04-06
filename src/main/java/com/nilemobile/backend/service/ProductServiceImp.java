@@ -303,7 +303,7 @@ public class ProductServiceImp implements ProductService {
             String keyword,
             Integer minBattery, Integer maxBattery,
             Float minScreenSize, Float maxScreenSize,
-            Long minPrice, Long maxPrice,
+            Long minPrice, Long maxPrice, String secondLevel, String thirdLevel,
             String sort, Integer pageNumber, Integer pageSize) {
 
         // Xử lý giá trị mặc định cho phân trang
@@ -333,7 +333,7 @@ public class ProductServiceImp implements ProductService {
         Specification<Product> spec = ProductSpecification.filterByKeywordPriceBatteryAndScreenSize(
                 keyword, minBattery, maxBattery,
                 minScreenSize, maxScreenSize,
-                minPrice, maxPrice
+                minPrice, maxPrice, secondLevel, thirdLevel
         );
 
         return productRepository.findAll(spec, pageable);

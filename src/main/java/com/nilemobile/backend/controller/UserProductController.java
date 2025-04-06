@@ -113,6 +113,8 @@ public class UserProductController {
             @RequestParam(required = false) Float maxScreenSize,
             @RequestParam(required = false) Long minPrice,
             @RequestParam(required = false) Long maxPrice,
+            @RequestParam(required = false) String secondLevel,
+            @RequestParam(required = false) String thirdLevel,
             @RequestParam(required = false) String sort,
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize) throws ProductException {
@@ -132,7 +134,7 @@ public class UserProductController {
                 keyword,
                 minBattery, maxBattery,
                 minScreenSize, maxScreenSize,
-                minPrice, maxPrice,
+                minPrice, maxPrice, secondLevel, thirdLevel,
                 sort, pageNumber, pageSize
         );
 

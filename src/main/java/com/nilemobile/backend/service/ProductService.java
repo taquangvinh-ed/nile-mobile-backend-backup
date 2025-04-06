@@ -46,6 +46,6 @@ public interface ProductService {
             String keyword,
             Integer minBattery, Integer maxBattery,
             Float minScreenSize, Float maxScreenSize,
-            Long minPrice, Long maxPrice,
+            Long minPrice, Long maxPrice, String secondLevel, String thirdLevel,
             String sort, Integer pageNumber, Integer pageSize);
 }

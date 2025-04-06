@@ -1,5 +1,6 @@
 package com.nilemobile.backend.specification;
 
+import com.nilemobile.backend.model.Categories;
 import com.nilemobile.backend.model.Product;
 import com.nilemobile.backend.model.Variation;
 import jakarta.persistence.criteria.Join;
@@ -91,16 +92,59 @@ public class ProductSpecification {
         };
     }
 
+    public static Specification<Product> hasSecondLevel(String secondLevel) {
+        return (root, query, criteriaBuilder) -> {
+            if (secondLevel == null || secondLevel.trim().isEmpty()) {
+                return null;
+            }
+
+            // Tham gia với bảng Categories (danh mục cấp 3)
+            Join<Product, Categories> categoryJoin = root.join("categories");
+
+            // Tham gia với danh mục cha (danh mục cấp 2)
+            Join<Categories, Categories> parentCategoryJoin = categoryJoin.join("parentCategory");
+
+            // Kiểm tra danh mục cấp 2 (level = 2) và tên khớp với secondLevel
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(parentCategoryJoin.get("level"), 2));
+            predicates.add(criteriaBuilder.equal(parentCategoryJoin.get("name"), secondLevel));
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public static Specification<Product> hasThirdLevel(String thirdLevel) {
+        return (root, query, criteriaBuilder) -> {
+            if (thirdLevel == null || thirdLevel.trim().isEmpty()) {
+                return null;
+            }
+
+            // Tham gia với bảng Categories (danh mục cấp 3)
+            Join<Product, Categories> categoryJoin = root.join("categories");
+
+            // Kiểm tra danh mục cấp 3 (level = 3) và tên khớp với thirdLevel
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(criteriaBuilder.equal(categoryJoin.get("level"), 3));
+            predicates.add(criteriaBuilder.equal(categoryJoin.get("name"), thirdLevel));
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+
     // Kết hợp các điều kiện lọc
     public static Specification<Product> filterByKeywordPriceBatteryAndScreenSize(
             String keyword,
             Integer minBattery, Integer maxBattery,
             Float minScreenSize, Float maxScreenSize,
-            Long minPrice, Long maxPrice) {
+            Long minPrice, Long maxPrice,
+            String secondLevel, String thỉrdLevel) {
         return Specification.where(hasKeyword(keyword))
                 .and(hasBatteryCapacity(minBattery, maxBattery))
                 .and(hasScreenSize(minScreenSize, maxScreenSize))
                 .and(hasPriceRange(minPrice, maxPrice))
+                .and(hasSecondLevel(secondLevel))
+                .and(hasThirdLevel(thỉrdLevel))
                 .and(inStock());
     }
 }

@@ -35,16 +35,20 @@ public class OrderServiceImp implements OrderService {
 
     private VariationRepository variationRepository;
 
+    private CartItemService cartItemService;
+
     public OrderServiceImp(CartRepository cartRepository,
                            CartService cartService,
                            ProductService productService,
                            OrderRepository orderRepository,
-                           VariationRepository variationRepository) {
+                           VariationRepository variationRepository,
+                           CartItemService cartItemService) {
         this.cartRepository = cartRepository;
         this.cartService = cartService;
         this.productService = productService;
         this.orderRepository = orderRepository;
         this.variationRepository = variationRepository;
+        this.cartItemService = cartItemService;
     }
 
 //    @Override
@@ -235,7 +239,17 @@ public class OrderServiceImp implements OrderService {
         order.setTotalItem(totalItem);
         order.setOrderDetails(orderDetails);
 
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        for (Map<String, Object> item : selectedItems) {
+            Object cartItemIdObj = item.get("id"); // Lấy id của CartItem từ selectedItems
+            if (cartItemIdObj == null) {
+                throw new Orderexception("ID của CartItem không được để trống");
+            }
+            Long cartItemId = Long.parseLong(cartItemIdObj.toString());
+            cartItemService.removeCartItem(user.getUserId(), cartItemId);
+        }
+
+        return savedOrder;
     }
 
     @Override
@@ -346,7 +360,19 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     public void deleteOrder(Long orderId) throws Orderexception {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new Orderexception("Không tìm thấy đơn hàng với ID: " + orderId));
 
+        if (!order.getStatus().equals(OrderStatus.PLACED) && !order.getStatus().equals(OrderStatus.CANCELED)) {
+            throw new Orderexception("Không thể xóa đơn hàng vì trạng thái hiện tại là: " + order.getStatus() +
+                    ". Chỉ có thể xóa đơn hàng ở trạng thái PLACED hoặc CANCELED.");
+        }
+
+        try {
+            orderRepository.delete(order);
+        } catch (Exception e) {
+            throw new Orderexception("Lỗi khi xóa đơn hàng với ID: " + orderId + ". Chi tiết: " + e.getMessage());
+        }
     }
 
     @Override

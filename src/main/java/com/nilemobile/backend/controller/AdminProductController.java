@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -42,10 +43,14 @@ public class AdminProductController {
     }
 
     @PostMapping("/create-model")
-    public ResponseEntity<ProductResponseDTO> createProductHandler(@RequestBody CreateProductRequest request) throws ProductException {
-        Product product = productService.createProduct(request);
-        ProductResponseDTO productDTO = new ProductResponseDTO(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
+    public ResponseEntity<List<ProductResponseDTO>> createProductsHandler(@RequestBody List<CreateProductRequest> requests) throws ProductException {
+        List<ProductResponseDTO> createdProducts = new ArrayList<>();
+        for (CreateProductRequest request : requests) {
+            Product product = productService.createProduct(request);
+            ProductResponseDTO productDTO = new ProductResponseDTO(product);
+            createdProducts.add(productDTO);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProducts);
     }
 
     @GetMapping("/get-all")

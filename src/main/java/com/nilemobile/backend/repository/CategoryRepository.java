@@ -20,6 +20,12 @@ public interface CategoryRepository extends JpaRepository<Categories, Long> {
     @Query("SELECT c.categories_id FROM Categories c WHERE c.name = :name")
     List<Long> findParentIdsByName(String name);
 
+    @Query("SELECT c FROM Categories c WHERE c.name = :name AND c.level = 2")
+    Optional<Categories> findBrandByNameAndLevel(@Param("name") String name);
+
     @Query("SELECT c FROM Categories c WHERE c.name = :name AND c.parentCategory = :parent")
     Optional<Categories> findByNameAndParentCategory(@Param("name") String name, @Param("parent") Categories parentCategory);
+
+    @Query("SELECT c FROM Categories c WHERE c.parentCategory = :parent")
+    List<Categories> findByParentCategory(@Param("parent") Categories parentCategory);
 }

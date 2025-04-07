@@ -1,12 +1,12 @@
 package com.nilemobile.backend.controller;
 
+import com.nilemobile.backend.model.Categories;
 import com.nilemobile.backend.reponse.CategoryDTO;
+import com.nilemobile.backend.request.CreateCategoryRequest;
 import com.nilemobile.backend.service.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +21,40 @@ public class CategoryController {
         return categoryServiceImp.getAllBrands();
     }
 
-    @GetMapping("/series/get-all/{brandName}")
-    public List<CategoryDTO> getAllSeriesByBrand(@PathVariable String brandName){
-        return categoryServiceImp.getAllSeries(brandName);
+    @PostMapping("/brand/add")
+    public Categories createBrand(@RequestBody CreateCategoryRequest request) {
+        return categoryServiceImp.createBrand(request);
+    }
+
+    @PutMapping("/brand/update/{id}")
+    public ResponseEntity<CategoryDTO> updateBrand(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        Categories updatedBrand = categoryServiceImp.updateBrand(id, categoryDTO);
+        return ResponseEntity.ok(new CategoryDTO(updatedBrand));
+    }
+
+    @DeleteMapping("/brand/delete/{id}")
+    public void deleteBrand(@PathVariable Long id) {
+        categoryServiceImp.deleteBrandById(id);
+    }
+
+    @GetMapping("/series/get-all/{brandId}")
+    public List<CategoryDTO> getAllSeriesByBrand(@PathVariable Long brandId){
+        return categoryServiceImp.getAllSeries(brandId);
+    }
+
+    @PostMapping("/series/add/{brandId}")
+    public Categories createSeries(@PathVariable Long brandId, @RequestBody CreateCategoryRequest request) {
+        return categoryServiceImp.createSeries(brandId, request);
+    }
+
+    @PutMapping("/series/update/{id}")
+    public ResponseEntity<CategoryDTO> updateSeries(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        Categories updatedSeries = categoryServiceImp.updateSeries(id, categoryDTO);
+        return ResponseEntity.ok(new CategoryDTO(updatedSeries));
+    }
+
+    @DeleteMapping("/series/delete/{id}")
+    public void deleteSeries(@PathVariable Long id) {
+        categoryServiceImp.deleteSeriesById(id);
     }
 }

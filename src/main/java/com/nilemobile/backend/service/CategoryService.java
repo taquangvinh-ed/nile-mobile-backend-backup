@@ -8,6 +8,11 @@ import java.util.List;
 
 public interface CategoryService {
     public Categories createBrand(CreateCategoryRequest request);
+    public Categories updateBrand(Long id, CategoryDTO categoryDTO);
+    public void deleteBrandById(Long id);
     public List<CategoryDTO> getAllBrands();
-    public List<CategoryDTO> getAllSeries(String brand);
+    public Categories createSeries(Long brandId, CreateCategoryRequest request);
+    public Categories updateSeries(Long id, CategoryDTO categoryDTO);
+    public void deleteSeriesById(Long id);
+    public List<CategoryDTO> getAllSeries(Long brandId);
 }

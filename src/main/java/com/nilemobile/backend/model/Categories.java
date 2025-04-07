@@ -1,10 +1,12 @@
 package com.nilemobile.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Categories {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
